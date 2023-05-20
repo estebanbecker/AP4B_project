@@ -4,14 +4,18 @@ import java.util.HashMap;
 
 public class Node {
     
-    Integer id;
+    private static int lastId = 0;
+
+    int id;
     Integer position[] = new Integer[2]; // [x, y]
 
     HashMap<Integer, Edge> edges;
 
 
     public Node(Integer id) {
-        this.id = id;
+        this.id = ++lastId;
+        edges = new HashMap<Integer, Edge>();
+
     }
 
     public Integer getId() {
