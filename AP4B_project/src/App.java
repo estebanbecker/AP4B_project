@@ -41,5 +41,6 @@ public class App {
 
         System.out.println("Weight of 1-2: " + weight);
 
+
     }
 }
