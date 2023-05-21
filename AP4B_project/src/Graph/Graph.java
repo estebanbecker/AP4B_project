@@ -85,6 +85,26 @@ public class Graph {
     }
 
     /**
+     * Prints a node
+     * @param node_id       The id of the node
+     */
+    public void printNode(Integer node_id) {
+        Node node = nodes.get(node_id);
+        System.out.println("Node " + node.getId() + " at position (" + node.position[0] + ", " + node.position[1]
+                + ") has edges:");
+        for (Edge edge : node.edges.values()) {
+            System.out.println("    " + edge.label + " with weight " + edge.weight);
+        }
+    }
+
+    public void printEdge(Integer node_from_id, Integer node_to_id) {
+        Node node_from = nodes.get(node_from_id);
+        Edge edge = node_from.edges.get(node_to_id);
+        System.out.println("Edge from " + node_from_id + " to " + node_to_id + " with label " + edge.label
+                + " and weight " + edge.weight);
+    }
+
+    /**
      * Returns the neigbourghs of a node
      * @param node_id       The id of the node
      * @return              An array of the ids of the neigbourghs
@@ -117,5 +137,7 @@ public class Graph {
         Edge edge = node_from.edges.get(node_to_id);
         return edge.weight;
     }
+
+
 
 }
