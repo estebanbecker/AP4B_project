@@ -6,14 +6,16 @@ public class Node {
     
     private static int lastId = 0;
 
-    int id;
+    Integer id;
     Integer position[] = new Integer[2]; // [x, y]
 
     HashMap<Integer, Edge> edges;
 
 
-    public Node(Integer id) {
+    public Node(Integer x, Integer y) {
         this.id = ++lastId;
+        this.position[0] = x;
+        this.position[1] = y;
         edges = new HashMap<Integer, Edge>();
 
     }
@@ -22,7 +24,7 @@ public class Node {
         return id;
     }
 
-    public void addEdge(Node node, Edge edge) {
-        edges.put(node.getId(), edge);
+    public void addEdge(Integer node_to_id, Edge edge) {
+        edges.put(node_to_id, edge);
     }
 }
