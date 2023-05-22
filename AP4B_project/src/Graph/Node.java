@@ -28,4 +28,20 @@ public class Node {
         Edge edge= new Edge(weight, label, this.id, node_to_id);
         edges.put(node_to_id, edge);
     }
+
+    public Integer[] getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer[] position) {
+        this.position = position;
+    }
+
+    public HashMap<Integer, Edge> getEdges() {
+        return edges;
+    }
+
+    public void setEdges(HashMap<Integer, Edge> edges) {
+        this.edges = edges;
+    }
 }

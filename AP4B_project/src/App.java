@@ -1,6 +1,4 @@
-import Graph.Edge;
 import Graph.Graph;
-import Graph.Node;
 
 public class App {
     public static void main(String[] args) throws Exception {
@@ -41,6 +39,7 @@ public class App {
 
         System.out.println("Weight of 1-2: " + weight);
 
-
+        //UI ui = new UI(graph);
+        //UI.launch(args);
     }
 }

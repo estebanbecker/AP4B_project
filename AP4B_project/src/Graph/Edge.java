@@ -9,6 +9,7 @@ public class Edge {
     public Integer node_id_from;
 
     public Integer node_id_to;
+    private Integer nodeToId;
 
     public Edge(float w, String l, Integer node_id_from, Integer node_id_to) {
         this.weight = w;
@@ -17,4 +18,11 @@ public class Edge {
         this.node_id_to = node_id_to;
     }
 
+    public Integer getNodeToId() {
+        return nodeToId;
+    }
+
+    public void setNodeToId(Integer nodeToId) {
+        this.nodeToId = nodeToId;
+    }
 }

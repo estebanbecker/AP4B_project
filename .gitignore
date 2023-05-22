@@ -1,2 +1,14 @@
 AP4B_project/src/App.java
 AP4B_project/bin/Graph/Graph.class
+out/production/AP4B_project/App.class
+out/production/AP4B_project/Graph/Edge.class
+out/production/AP4B_project/Graph/Graph.class
+out/production/AP4B_project/Graph/Node.class
+out/production/AP4B_project/UI/UI.class
+out/production/AP4B_project/testTools/test.class
+AP4B_project.iml
+.gitignore
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/libraries/lib.xml
