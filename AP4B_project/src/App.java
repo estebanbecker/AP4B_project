@@ -16,7 +16,7 @@ public class App {
 
         graph.createNodes(positions);
 
-        graph.connectBidirectionalNodes(1, 2, "1-2");
+        graph.connectBidirectionalNodes(1, 2, "Rue JO");
 
         graph.connectBidirectionalNodes(1, 3, "1-3");
 
