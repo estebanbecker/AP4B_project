@@ -25,4 +25,9 @@ public class Edge {
     public void setNodeToId(Integer nodeToId) {
         this.nodeToId = nodeToId;
     }
+
+    public String getLabel() {
+        return label;
+    }
 }
+

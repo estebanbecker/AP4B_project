@@ -12,3 +12,6 @@ AP4B_project.iml
 .idea/modules.xml
 .idea/vcs.xml
 .idea/libraries/lib.xml
+out/production/AP4B_project/App$GraphPanel.class
+out/production/AP4B_project/testTools/test$1.class
+.gitignore

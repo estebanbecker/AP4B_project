@@ -1,27 +1,25 @@
 package testTools;
 
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class test extends Application {
+public class test {
+
     public static void main(String[] args) {
-        launch(args);
-    }
+        JFrame frame = new JFrame("Swing App");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    @Override
-    public void start(Stage primaryStage) {
-        Label label = new Label("JavaFX Installation Successful!");
+        JButton button = new JButton("Click me!");
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Button clicked!");
+            }
+        });
 
-        StackPane root = new StackPane();
-        root.getChildren().add(label);
-
-        Scene scene = new Scene(root, 300, 200);
-
-        primaryStage.setTitle("JavaFX Installation Test");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        frame.getContentPane().add(button);
+        frame.pack();
+        frame.setVisible(true);
     }
 }

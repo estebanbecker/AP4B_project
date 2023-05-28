@@ -7,7 +7,7 @@ public class Node {
     private static int lastId = 0;
 
     Integer id;
-    Integer position[] = new Integer[2]; // [x, y]
+    Integer[] position = new Integer[2]; // [x, y]
 
     HashMap<Integer, Edge> edges;
 
