@@ -53,16 +53,33 @@ public class GraphEditor {
             }
         });
 
-        int fabSize = 50;
-        int fabMargin = 10;
-        int fabX = frame.getWidth() - fabSize - fabMargin;
-        int fabY = frame.getHeight() - fabSize - fabMargin;
+        // Add a ComponentListener to reset FAB position on window resize
+        frame.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                int fabSize = 50;
+                int padding = 10;
+                int frameWidth = frame.getWidth();
+                int frameHeight = frame.getHeight();
+                int fabX = frameWidth - fabSize - padding;
+                int fabY = frameHeight - fabSize - padding - 25;
+
+                fab.setBounds(fabX, fabY, fabSize, fabSize);
+            }
+        });
         fab.setBounds(10, 10, 100, 20);
         fab.setForeground(new Color(144, 31, 199));
         fab.setFocusPainted(false);
         fab.setFont(new Font("Arial", Font.BOLD, 30));
-        fab.setSize(fabSize, fabSize);
-        fab.setLocation(fabX, fabY);
+        // Set the initial position of the FAB
+        int fabSize = 50;
+        int padding = 10;
+        int frameWidth = frame.getWidth();
+        int frameHeight = frame.getHeight();
+        int fabX = frameWidth - fabSize - padding;
+        int fabY = frameHeight - fabSize - padding;
+
+        fab.setBounds(fabX, fabY, fabSize, fabSize);
 
         panel.add(fab);
         frame.pack();
