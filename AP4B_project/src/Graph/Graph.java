@@ -97,7 +97,7 @@ public class Graph {
      * @param node_id       The id of the node
      * @return              An array of the ids of the neigbourghs
      */
-    public Integer[] getNeigbourgh(Integer node_id) {
+    public Integer[] getNeighgbor(Integer node_id) {
         Node node = nodes.get(node_id);
         return node.edges.keySet().toArray(new Integer[0]);
     }
