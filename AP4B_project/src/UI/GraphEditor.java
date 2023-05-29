@@ -12,6 +12,9 @@ public class GraphEditor {
     public static void createAndShowGUI(Graph graph) {
         JFrame frame = new JFrame("Graph Nodes");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+        //center the frame
+        frame.setLocationRelativeTo(null);
 
         JPanel panel = new GraphPanel(graph.getNodes());
         frame.getContentPane().add(panel);
@@ -23,8 +26,8 @@ public class GraphEditor {
     private static class GraphPanel extends JPanel {
         private HashMap<Integer, Node> nodes;
 
-        private int offsetX = 0; // X offset for dragging
-        private int offsetY = 0; // Y offset for dragging
+        private int offsetX = 100; // X offset for dragging
+        private int offsetY = 100; // Y offset for dragging
         private double scale = 1.0; // Zoom scale
 
         private int startX; // Start X position for dragging
@@ -99,6 +102,18 @@ public class GraphEditor {
             // Apply zoom and offset transformations
             g2d.translate(offsetX, offsetY);
             g2d.scale(scale, scale);
+
+            //draw a grid in X+- and Y+- directions
+            g2d.setColor(Color.LIGHT_GRAY);
+            for (int i = -2000; i < 2000; i += 50) {
+                g2d.drawLine(i, -2000, i, 2000);
+                g2d.drawLine(-2000, i, 2000, i);
+            }
+
+            //draw a red circle on the 0,0 point
+            g2d.setColor(Color.RED);
+            g2d.fillOval(-5, -5, 10, 10);
+
 
             g2d.setStroke(new BasicStroke(2.0f));
 
@@ -180,7 +195,7 @@ public class GraphEditor {
          * }
          */
         public Dimension getPreferredSize() {
-            return new Dimension(500, 500);
+            return new Dimension(800, 800);
         }
     }
 }
