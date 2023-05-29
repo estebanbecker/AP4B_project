@@ -2,6 +2,7 @@ package UI;
 
 import Graph.Graph;
 import Graph.Node;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,6 +39,12 @@ public class GraphEditor {
     }
     
     public static void createAndShowGUI(Graph graph) {
+        //setup flatlaf
+        try {
+            FlatMacLightLaf.setup();
+        } catch (Exception e) {
+            System.err.println("Failed to initialize LaF");
+        }
         JFrame frame = new JFrame("Graph Nodes");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1200, 800);
