@@ -1,7 +1,4 @@
 # AP4B project
-
-## Screenshots
-
 ![Screenshot 2023-05-29 at 13.55.40](https://i.imgur.com/zX4qR5O.png)
 
 ## Description
