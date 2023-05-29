@@ -124,23 +124,37 @@ public class GraphEditor {
                 private final double MAX_SCALE = 2.0;
                 public void mouseWheelMoved(MouseWheelEvent e) {
                     int notches = e.getWheelRotation();
+                    int mouseX = e.getX();
+                    int mouseY = e.getY();
+
                     double scaleFactor = Math.pow(1.00005, notches);
 
                     // Apply the quadratic curve to the scale factor
                     scaleFactor = Math.pow(scaleFactor, 2.0);
 
-                    scale *= scaleFactor;
+                    //scale *= scaleFactor;
+
+                    double newScale = scale * scaleFactor;
 
                     // Clamp the scale within the specified range
                     scale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, scale));
 
                     // Limit the scale to a reasonable range
-                    if (scale < MIN_SCALE) {
+                    if (scale < MIN_SCALE || newScale < MIN_SCALE) {
                         scale = MIN_SCALE;
-                    } else if (scale > MAX_SCALE) {
+                        newScale=MIN_SCALE;
+                    } else if (scale > MAX_SCALE || newScale > MAX_SCALE) {
                         scale = MAX_SCALE;
+                        newScale=MAX_SCALE;
                     }
+                    // Calculate the offset adjustment based on the mouse position
+                    int offsetXAdjustment = (int) (mouseX - mouseX * (newScale / scale));
+                    int offsetYAdjustment = (int) (mouseY - mouseY * (newScale / scale));
 
+                    // Update the scale and offset
+                    scale = newScale;
+                    offsetX += offsetXAdjustment;
+                    offsetY += offsetYAdjustment;
 
                     repaint();
                 }
