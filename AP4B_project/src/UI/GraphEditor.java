@@ -42,7 +42,8 @@ public class GraphEditor {
         panel.setLayout(null);
         frame.getContentPane().add(panel);
 
-        JButton fab = new JButton("+");
+        JButton fab = new JButton("+ add node");
+        fab.setHorizontalTextPosition(SwingConstants.CENTER);
         fab.setFocusPainted(false);
         fab.addActionListener(new ActionListener() {
             @Override
@@ -57,29 +58,31 @@ public class GraphEditor {
         frame.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                int fabSize = 50;
+                int fabWidth = 140;
+                int fabHeight = 50;
                 int padding = 10;
                 int frameWidth = frame.getWidth();
                 int frameHeight = frame.getHeight();
-                int fabX = frameWidth - fabSize - padding;
-                int fabY = frameHeight - fabSize - padding - 25;
+                int fabX = frameWidth - fabWidth - padding;
+                int fabY = frameHeight - fabHeight - padding - 25;
 
-                fab.setBounds(fabX, fabY, fabSize, fabSize);
+                fab.setBounds(fabX, fabY, fabWidth, fabHeight);
             }
         });
         fab.setBounds(10, 10, 100, 20);
         fab.setForeground(new Color(144, 31, 199));
         fab.setFocusPainted(false);
-        fab.setFont(new Font("Arial", Font.BOLD, 30));
+        fab.setFont(new Font("Arial", Font.BOLD, 20 ));
         // Set the initial position of the FAB
-        int fabSize = 50;
+        int fabWidth = 140;
+        int fabHeight = 50;
         int padding = 10;
         int frameWidth = frame.getWidth();
         int frameHeight = frame.getHeight();
-        int fabX = frameWidth - fabSize - padding;
-        int fabY = frameHeight - fabSize - padding;
+        int fabX = frameWidth - fabWidth - padding;
+        int fabY = frameHeight - fabHeight - padding;
 
-        fab.setBounds(fabX, fabY, fabSize, fabSize);
+        fab.setBounds(fabX, fabY, fabWidth, fabHeight);
 
         panel.add(fab);
         frame.pack();
