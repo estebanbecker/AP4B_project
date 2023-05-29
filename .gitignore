@@ -1,5 +1,6 @@
 AP4B_project/bin/*
 AP4B_project.iml
 .gitignore
-.idea/*
+.idea/
 out/*
+.vscode/
