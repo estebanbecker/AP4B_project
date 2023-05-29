@@ -36,6 +36,7 @@ public class GraphEditor {
             }
         });
     }
+    
     public static void createAndShowGUI(Graph graph) {
         JFrame frame = new JFrame("Graph Nodes");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -160,14 +161,14 @@ public class GraphEditor {
 
             // Add mouse wheel listener for zooming
             addMouseWheelListener(new MouseWheelListener() {
-                private final double MIN_SCALE = 0.5;
-                private final double MAX_SCALE = 2.0;
+                private final double MIN_SCALE = 0.6;
+                private final double MAX_SCALE = 3.0;
                 public void mouseWheelMoved(MouseWheelEvent e) {
                     int notches = e.getWheelRotation();
                     int mouseX = e.getX();
                     int mouseY = e.getY();
 
-                    double scaleFactor = Math.pow(1.00003, notches);
+                    double scaleFactor = Math.pow(1.000023, notches);
 
                     // Apply the quadratic curve to the scale factor
                     scaleFactor = Math.pow(scaleFactor, 2.0);

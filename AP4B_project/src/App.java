@@ -14,7 +14,8 @@ public class App {
                 { 100, 100 },
                 { 200, 200 },
                 { 300, 300 },
-                { 400, 400 }
+                { 400, 400 },
+                { 500, 1200}
         };
 
         graph.createNodes(positions);
@@ -23,6 +24,7 @@ public class App {
         graph.connectBidirectionalNodes(2, 3, "very silly");
         graph.connectBidirectionalNodes(4, 5, ":333 ");
         graph.connectUnidirectionalNodes(3, 4, "3-4");
+        graph.connectUnidirectionalNodes(4, 6, "big");
 
         SwingUtilities.invokeLater(() -> {
             createAndShowGUI(graph);
