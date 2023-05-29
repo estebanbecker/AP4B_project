@@ -9,16 +9,62 @@ import java.awt.event.*;
 import java.util.HashMap;
 
 public class GraphEditor {
+    private static void addNodeOnClick(JPanel panel, Graph graph) {
+        // Change cursor to crosshair
+        panel.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+        panel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (SwingUtilities.isLeftMouseButton(e)) {
+
+                    super.mouseClicked(e);
+                    int x = (int) ((e.getX() - ((GraphPanel) panel).getOffsetX()) / ((GraphPanel) panel).getScale());
+                    int y = (int) ((e.getY() - ((GraphPanel) panel).getOffsetY()) / ((GraphPanel) panel).getScale());
+
+                    Node node = new Node(x, y);
+                    graph.addNode(node);
+
+                    // Repaint the panel
+                    panel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                    panel.removeMouseListener(this);
+                    panel.repaint();
+                }
+            }
+        });
+    }
     public static void createAndShowGUI(Graph graph) {
         JFrame frame = new JFrame("Graph Nodes");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 600);
-        //center the frame
+        frame.setSize(1200, 800);
         frame.setLocationRelativeTo(null);
 
         JPanel panel = new GraphPanel(graph.getNodes());
+        panel.setLayout(null);
         frame.getContentPane().add(panel);
 
+        JButton fab = new JButton("+");
+        fab.setFocusPainted(false);
+        fab.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource() == fab) {
+                    addNodeOnClick(panel, graph);
+                }
+            }
+        });
+
+        int fabSize = 50;
+        int fabMargin = 10;
+        int fabX = frame.getWidth() - fabSize - fabMargin;
+        int fabY = frame.getHeight() - fabSize - fabMargin;
+        fab.setBounds(10, 10, 100, 20);
+        fab.setForeground(new Color(144, 31, 199));
+        fab.setFocusPainted(false);
+        fab.setFont(new Font("Arial", Font.BOLD, 30));
+        fab.setSize(fabSize, fabSize);
+        fab.setLocation(fabX, fabY);
+
+        panel.add(fab);
         frame.pack();
         frame.setVisible(true);
     }
@@ -27,6 +73,20 @@ public class GraphEditor {
         private HashMap<Integer, Node> nodes;
 
         private int offsetX = 100; // X offset for dragging
+
+
+        public int getOffsetX() {
+            return offsetX;
+        }
+
+        public int getOffsetY() {
+            return offsetY;
+        }
+
+        public double getScale() {
+            return scale;
+        }
+
         private int offsetY = 100; // Y offset for dragging
         private double scale = 1.0; // Zoom scale
 
@@ -195,7 +255,7 @@ public class GraphEditor {
          * }
          */
         public Dimension getPreferredSize() {
-            return new Dimension(800, 800);
+            return new Dimension(1200, 800);
         }
     }
 }

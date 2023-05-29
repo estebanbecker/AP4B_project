@@ -10,7 +10,7 @@ public class Graph {
     }
 
 
-    void addNode(Node node) {
+    public void addNode(Node node) {
         nodes.put(node.getId(), node);
     }
 
