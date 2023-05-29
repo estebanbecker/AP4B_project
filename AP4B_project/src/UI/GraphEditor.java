@@ -9,7 +9,7 @@ import java.awt.event.*;
 import java.util.HashMap;
 
 public class GraphEditor {
-    private static void addNodeOnClick(JPanel panel, Graph graph) {
+    private static void addNodeOnClick(JPanel panel, Graph graph, boolean selected) {
         // Change cursor to crosshair
         panel.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
         panel.addMouseListener(new MouseAdapter() {
@@ -21,6 +21,10 @@ public class GraphEditor {
                     int x = (int) ((e.getX() - ((GraphPanel) panel).getOffsetX()) / ((GraphPanel) panel).getScale());
                     int y = (int) ((e.getY() - ((GraphPanel) panel).getOffsetY()) / ((GraphPanel) panel).getScale());
 
+                    if(selected) {
+                        x = (x + 25) / 50 * 50;
+                        y = (y + 25) / 50 * 50;
+                    }
                     Node node = new Node(x, y);
                     graph.addNode(node);
 
@@ -42,6 +46,20 @@ public class GraphEditor {
         panel.setLayout(null);
         frame.getContentPane().add(panel);
 
+        JCheckBox snap = new JCheckBox("Snap to grid");
+        snap.setBounds(5, 10, 500, 20);
+        snap.setSelected(true);
+        snap.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource() == snap) {
+                    ((GraphPanel) panel).setSnap(snap.isSelected());
+                    panel.repaint();
+                }
+            }
+        });
+        panel.add(snap);
+
         JButton fab = new JButton("+ add node");
         fab.setHorizontalTextPosition(SwingConstants.CENTER);
         fab.setFocusPainted(false);
@@ -49,10 +67,12 @@ public class GraphEditor {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (e.getSource() == fab) {
-                    addNodeOnClick(panel, graph);
+                    addNodeOnClick(panel, graph, snap.isSelected());
                 }
             }
         });
+
+        //add a checkbox for snapping
 
         // Add a ComponentListener to reset FAB position on window resize
         frame.addComponentListener(new ComponentAdapter() {
@@ -147,7 +167,7 @@ public class GraphEditor {
                     int mouseX = e.getX();
                     int mouseY = e.getY();
 
-                    double scaleFactor = Math.pow(1.00005, notches);
+                    double scaleFactor = Math.pow(1.00003, notches);
 
                     // Apply the quadratic curve to the scale factor
                     scaleFactor = Math.pow(scaleFactor, 2.0);
@@ -290,6 +310,9 @@ public class GraphEditor {
          */
         public Dimension getPreferredSize() {
             return new Dimension(1200, 800);
+        }
+
+        public void setSnap(boolean selected) {
         }
     }
 }
