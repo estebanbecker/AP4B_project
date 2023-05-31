@@ -7,13 +7,21 @@ public class Node {
     private static int lastId = 0;
 
     Integer id;
-    Integer[] position = new Integer[2]; // [x, y]
+    Float[] position = new Float[2]; // [x, y]
 
     HashMap<Integer, Edge> edges;
 
 
-    public Node(Integer x, Integer y) {
+    public Node(Float x, Float y) {
         this.id = lastId++;
+        this.position[0] = x;
+        this.position[1] = y;
+        edges = new HashMap<Integer, Edge>();
+
+    }
+
+    public Node(Integer id, Float x, Float y) {
+        this.id = id;
         this.position[0] = x;
         this.position[1] = y;
         edges = new HashMap<Integer, Edge>();
@@ -29,11 +37,11 @@ public class Node {
         edges.put(node_to_id, edge);
     }
 
-    public Integer[] getPosition() {
+    public Float[] getPosition() {
         return position;
     }
 
-    public void setPosition(Integer[] position) {
+    public void setPosition(Float[] position) {
         this.position = position;
     }
 
@@ -43,5 +51,9 @@ public class Node {
 
     public void setEdges(HashMap<Integer, Edge> edges) {
         this.edges = edges;
+    }
+
+    public static void setLastId(Integer lastId) {
+        Node.lastId = lastId;
     }
 }

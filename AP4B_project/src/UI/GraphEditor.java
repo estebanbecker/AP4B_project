@@ -26,7 +26,7 @@ public class GraphEditor {
                         x = (x + 25) / 50 * 50;
                         y = (y + 25) / 50 * 50;
                     }
-                    graph.createANode(x, y);
+                    graph.createANode((float) x, (float) y);
 
                     // Repaint the panel
                     panel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
@@ -240,8 +240,8 @@ public class GraphEditor {
 
 
             for (Node node : nodes.values()) {
-                int x1 = node.getPosition()[0];
-                int y1 = node.getPosition()[1];
+            int x1 = Math.round(node.getPosition()[0]);
+            int y1 = Math.round(node.getPosition()[1]);
                 //System.out.println("node: " + node.getId() + " edges: " + node.getEdges());
                 //get the color for a nice dark green
                 g2d.setColor(new Color(0, 100, 0));
@@ -254,8 +254,8 @@ public class GraphEditor {
                     Node neighborNode = nodes.get(neighborId);
 
                     if (neighborNode != null) {
-                        int x2 = neighborNode.getPosition()[0];
-                        int y2 = neighborNode.getPosition()[1];
+                        int x2 = Math.round(neighborNode.getPosition()[0]);
+                        int y2 = Math.round(neighborNode.getPosition()[1]);
                         double angle = Math.atan2(y2 - y1, x2 - x1);
 
                         int nodeRadius = 5; // Adjust the radius of the node circle as needed
