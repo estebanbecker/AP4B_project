@@ -26,8 +26,7 @@ public class GraphEditor {
                         x = (x + 25) / 50 * 50;
                         y = (y + 25) / 50 * 50;
                     }
-                    Node node = new Node(x, y);
-                    graph.addNode(node);
+                    graph.createANode(x, y);
 
                     // Repaint the panel
                     panel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
@@ -260,7 +259,6 @@ public class GraphEditor {
                         double angle = Math.atan2(y2 - y1, x2 - x1);
 
                         int nodeRadius = 5; // Adjust the radius of the node circle as needed
-                        int padding = 2; // Adjust the padding value as needed
 
                         // Calculate the adjusted start and end points
                         int startX = x1 + (int) (Math.cos(angle) * nodeRadius);

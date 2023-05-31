@@ -10,7 +10,7 @@ public class Graph {
     }
 
 
-    public void addNode(Node node) {
+    private void addNode(Node node) {
         nodes.put(node.getId(), node);
     }
 
@@ -53,11 +53,19 @@ public class Graph {
      */
     public void createNodes(Integer[][] positions) {
         for (Integer[] position : positions) {
-            Node node = new Node(position[0], position[1]);
-            addNode(node);
+            createANode( position[0], position[1]);
         }
     }
-
+    
+    /**
+     * Creates a node
+     * @param x     The x coordinate of the node
+     * @param y     The y coordinate of the node
+     */
+    public void createANode(Integer x, Integer y) {
+        Node node = new Node(x, y);
+        addNode(node);
+    }
     /**
      * Prints the graph
      */

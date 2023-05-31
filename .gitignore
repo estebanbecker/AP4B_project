@@ -5,3 +5,4 @@ AP4B_project.iml
 out/*
 .vscode/
 AP4B_project/src/META-INF/MANIFEST.MF
+AP4B_project/lib/flatlaf-3.1.1.jar
