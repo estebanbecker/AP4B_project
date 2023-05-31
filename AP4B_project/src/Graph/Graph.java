@@ -5,10 +5,20 @@ import java.util.HashMap;
 public class Graph {
     HashMap<Integer, Node> nodes;
 
+    /**
+     * Initializes a graph
+     */
     public Graph() {
         nodes = new HashMap<Integer, Node>();
     }
 
+    /**
+     * Initializes a graph with a list of nodes
+     * @param nodes    A Hashmap of nodes
+     */
+    public Graph(HashMap<Integer, Node> nodes) {
+        this.nodes = new HashMap<Integer, Node>(nodes);
+    }
 
     private void addNode(Node node) {
         nodes.put(node.getId(), node);
@@ -105,7 +115,7 @@ public class Graph {
      * @param node_id       The id of the node
      * @return              An array of the ids of the neigbourghs
      */
-    public Integer[] getNeighgbor(Integer node_id) {
+    public Integer[] getNeighbors(Integer node_id) {
         Node node = nodes.get(node_id);
         return node.edges.keySet().toArray(new Integer[0]);
     }
@@ -178,6 +188,26 @@ public class Graph {
         for (Node node_to : nodes.values()) {
             node_to.edges.remove(node_id);
         }
+    }
+
+    /**
+     * Update the label of an edge
+     * @param node_id_from  The id of the node from which the edge starts       
+     * @param node_id_to    The id of the node to which the edge ends
+     * @param label        The new label
+     */
+    public void updateEdgeName(Integer node_id_from, Integer node_id_to, String label){
+        Node node_from = nodes.get(node_id_from);
+        Edge edge = node_from.edges.get(node_id_to);
+        edge.label = label;
+    }
+
+    /**
+     * Return the the list of nodes ids
+     * @return list of nodes ids
+     */
+    public Integer[] getAllNodesId (){
+        return nodes.keySet().toArray(new Integer[0]);
     }
 
 }
