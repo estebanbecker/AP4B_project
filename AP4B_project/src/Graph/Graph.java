@@ -20,6 +20,20 @@ public class Graph {
         this.nodes = new HashMap<Integer, Node>(nodes);
     }
 
+    public Graph(Integer[] id, Float[] x, Float[] y) {
+        nodes = new HashMap<Integer, Node>();
+        Integer maximum_id = 0;
+        for (int i = 0; i < id.length; i++) {
+            Node node = new Node(id[i], x[i], y[i]);
+            addNode(node);
+
+            if (id[i] > maximum_id) {
+                maximum_id = id[i];
+            }
+        }
+        Node.setLastId(maximum_id + 1);
+    }
+
     private void addNode(Node node) {
         nodes.put(node.getId(), node);
     }
@@ -61,8 +75,8 @@ public class Graph {
      * Creates nodes from a list of positions
      * @param positions     A list of positions in the form of [x, y]
      */
-    public void createNodes(Integer[][] positions) {
-        for (Integer[] position : positions) {
+    public void createNodes(Float[][] positions) {
+        for (Float[] position : positions) {
             createANode( position[0], position[1]);
         }
     }
@@ -72,7 +86,7 @@ public class Graph {
      * @param x     The x coordinate of the node
      * @param y     The y coordinate of the node
      */
-    public void createANode(Integer x, Integer y) {
+    public void createANode(Float x, Float y) {
         Node node = new Node(x, y);
         addNode(node);
     }
@@ -157,9 +171,9 @@ public class Graph {
      * @param x       The new x coordinate
      * @param y     The new y coordinate
      */
-    public void updatePosition(Integer node_id, Integer x, Integer y){
+    public void updatePosition(Integer node_id, Float x, Float y){
         Node node = nodes.get(node_id);
-        Integer [] position = {x,y};
+        Float [] position = {x,y};
         node.setPosition(position);
         //Update the distance for each edge
 
@@ -209,5 +223,7 @@ public class Graph {
     public Integer[] getAllNodesId (){
         return nodes.keySet().toArray(new Integer[0]);
     }
+
+
 
 }
