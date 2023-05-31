@@ -1,4 +1,5 @@
 import Graph.Graph;
+import Graph.File;
 
 import javax.swing.*;
 
@@ -36,5 +37,19 @@ public class App {
         SwingUtilities.invokeLater(() -> {
             createAndShowGUI(graph);
         });
+
+
+        String filePath = "test.txt";
+        String flag1 = "***";
+        String flag2 = "*";
+
+        File fileParser = new File(filePath, flag1, flag2);
+        fileParser.readFile();
+
+        int id = fileParser.getId();
+        int x = fileParser.getX();
+        int y = fileParser.getY();
+        String label = fileParser.getLabel();
+
     }
 }
