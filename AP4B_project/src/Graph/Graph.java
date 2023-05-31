@@ -135,7 +135,7 @@ public class Graph {
     }
 
     /**
-     * reate a getNodes methods that returns the nodes hashmap
+     * create a getNodes methods that returns the nodes hashmap
      */
     public HashMap<Integer, Node> getNodes(){
         return nodes;
@@ -149,9 +149,8 @@ public class Graph {
      */
     public void updatePosition(Integer node_id, Integer x, Integer y){
         Node node = nodes.get(node_id);
-        node.position[0] = x;
-        node.position[1] = y;
-
+        Integer [] position = {x,y};
+        node.setPosition(position);
         //Update the distance for each edge
 
         for (Edge edge : node.edges.values()) {

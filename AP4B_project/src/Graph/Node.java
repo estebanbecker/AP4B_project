@@ -13,7 +13,7 @@ public class Node {
 
 
     public Node(Integer x, Integer y) {
-        this.id = ++lastId;
+        this.id = lastId++;
         this.position[0] = x;
         this.position[1] = y;
         edges = new HashMap<Integer, Edge>();
