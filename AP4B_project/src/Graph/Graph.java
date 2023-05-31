@@ -134,9 +134,51 @@ public class Graph {
         return edge.weight;
     }
 
-   //create a getNodes methods that returns the nodes hashmap
+    /**
+     * reate a getNodes methods that returns the nodes hashmap
+     */
     public HashMap<Integer, Node> getNodes(){
         return nodes;
+    }
+
+    /**
+     * Update the position of a node
+     * @param node_id  The id of the node
+     * @param x       The new x coordinate
+     * @param y     The new y coordinate
+     */
+    public void updatePosition(Integer node_id, Integer x, Integer y){
+        Node node = nodes.get(node_id);
+        node.position[0] = x;
+        node.position[1] = y;
+
+        //Update the distance for each edge
+
+        for (Edge edge : node.edges.values()) {
+            Node node_to = nodes.get(edge.node_id_to);
+            Float weight = (float) Math.sqrt(Math.pow(node.position[0] - node_to.position[0], 2)
+                    + Math.pow(node.position[1] - node_to.position[1], 2));
+            edge.weight = weight;
+        }
+    }
+
+    /**
+     * Delete a node
+     * @param node_id The id of the node
+     * @param force  If true, delete the node even if it has edges
+     */
+    public void deleteNode(Integer node_id, boolean force){
+       
+        Node node = nodes.get(node_id);
+        if (node.edges.size() == 0 || force){
+            nodes.remove(node_id);
+        }else if(!force){
+            throw new IllegalArgumentException("The node has edges, use force = true to delete it");
+        }
+
+        for (Node node_to : nodes.values()) {
+            node_to.edges.remove(node_id);
+        }
     }
 
 }
