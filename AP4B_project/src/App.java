@@ -1,4 +1,5 @@
 import Graph.Graph;
+import PathFinder.*;
 
 import javax.swing.*;
 
@@ -29,9 +30,25 @@ public class App {
         graph.connectUnidirectionalNodes(3, 4, "3-4");
         graph.connectUnidirectionalNodes(4, 6, "big");
         graph.connectUnidirectionalNodes(6, 5, "big");
+        graph.connectUnidirectionalNodes(6, 6, "big");
+
+        graph.updateEdgeName(6, 5, "big2");
 
         graph.deleteNode(2, true);
         graph.updatePosition(0, 50, 500);
+
+        Dijkstra solver = new Dijkstra();
+
+        IntFloatList result = solver.findShortestPath(graph, 3, 5);
+
+        System.out.println("Path: ");
+        for (int i = 0; i < result.getIntList().length; i++) {
+            System.out.println(result.getIntList()[i]);
+        }
+        System.out.println("Distance: " + result.getFloatValue());
+
+        System.out.println(graph.getEdgeWeight(3, 4));
+        System.out.println(graph.getEdgeWeight(4, 5));
 
         SwingUtilities.invokeLater(() -> {
             createAndShowGUI(graph);
