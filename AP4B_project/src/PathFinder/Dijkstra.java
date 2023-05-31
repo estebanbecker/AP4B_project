@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Dijkstra {
     
-    /*
+    /**
      * This method finds the shortest path between two nodes in a graph.
      * @param graph         The graph in which the path will be found
      * @param node_from_id  The id of the node from which the path starts
