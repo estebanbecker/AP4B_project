@@ -9,6 +9,13 @@ import java.util.List;
 
 public class Dijkstra {
     
+    /*
+     * This method finds the shortest path between two nodes in a graph.
+     * @param graph         The graph in which the path will be found
+     * @param node_from_id  The id of the node from which the path starts
+     * @param node_to_id    The id of the node to which the path ends
+     * @return              A list of node ids that represent the shortest path and the distance of the path in a IntFloatList
+     */
     public IntFloatList findShortestPath(Graph graph, Integer node_from_id, Integer node_to_id) {
     PriorityQueue<NodeDistance> queue = new PriorityQueue<>();
     HashMap<Integer, Integer> previous = new HashMap<>();
