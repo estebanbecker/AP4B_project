@@ -1,5 +1,6 @@
 import Graph.Graph;
-import PathFinder.*;
+import PathFinder.Dijkstra;
+import PathFinder.IntFloatList;
 
 import javax.swing.*;
 
