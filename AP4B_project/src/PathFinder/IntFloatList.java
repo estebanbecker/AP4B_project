@@ -3,8 +3,8 @@ package PathFinder;
 
 
 public class IntFloatList {
-    private Integer[] intList;
-    private Float floatValue;
+    private final Integer[] intList;
+    private final Float floatValue;
 
     /**
      * An object that contains an array of integers and a float value
