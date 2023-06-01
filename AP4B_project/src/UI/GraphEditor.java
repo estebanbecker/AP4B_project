@@ -608,19 +608,22 @@ public class GraphEditor {
             }
             hoveredNodes.clear();
             if (result != null) {
+                int x1=0, y1=0, x2=0, y2=0;
                 for (int i = 0; i < result.getIntList().length - 1; i++) {
                     //draw edges in red
-                    g2d.setColor(Color.RED);
-                    int x1 = Math.round(nodes.get(result.getIntList()[i]).getPosition()[0]);
-                    int y1 = Math.round(nodes.get(result.getIntList()[i]).getPosition()[1]);
-                    int x2 = Math.round(nodes.get(result.getIntList()[i + 1]).getPosition()[0]);
-                    int y2 = Math.round(nodes.get(result.getIntList()[i + 1]).getPosition()[1]);
+                    g2d.setColor(new Color(152, 70, 255, 255));
+                    x1 = Math.round(nodes.get(result.getIntList()[i]).getPosition()[0]);
+                    y1 = Math.round(nodes.get(result.getIntList()[i]).getPosition()[1]);
+                    x2 = Math.round(nodes.get(result.getIntList()[i + 1]).getPosition()[0]);
+                    y2 = Math.round(nodes.get(result.getIntList()[i + 1]).getPosition()[1]);
                     g2d.drawLine(x1, y1, x2, y2);
 
                     //draw string with distance
-                    g2d.setColor(Color.BLACK);
-                    g2d.drawString("Distance:" + result.getFloatValue().toString(), (x1 + x2) / 2 + 5, (y1 + y2) / 2 + 10);
                 }
+                g2d.setColor(new Color(0, 0, 0, 255));
+                g2d.setFont(new Font("Helvetica", Font.BOLD, 14));
+                g2d.drawString("distance: " + result.getFloatValue().toString() + " units", (x1 + x2) / 2 + 5, (y1 + y2) / 2 + 10);
+
             }
 
             g2d.scale(1.0 / scale, 1.0 / scale);
