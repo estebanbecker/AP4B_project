@@ -34,7 +34,6 @@ public class App {
         graph.connectUnidirectionalNodes(4, 6, "big");
         graph.connectUnidirectionalNodes(6, 5, "big");
         graph.connectUnidirectionalNodes(6, 6, "big");
-
         graph.updateEdgeName(6, 5, "big2");
 
         graph.deleteNode(2, true);

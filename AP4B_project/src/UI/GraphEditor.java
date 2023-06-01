@@ -12,6 +12,11 @@ import java.util.HashMap;
 
 public class GraphEditor {
 
+
+    private static final int CONTEXT_MENU_COOLDOWN = 1000; // Cooldown period in milliseconds
+    private static long lastContextMenuTime = 0; // Last time the context menu was invoked
+
+
     private static void addNodeOnClick(JPanel panel, Graph graph, boolean selected) {
         // Change cursor to crosshair
         panel.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
@@ -55,6 +60,7 @@ public class GraphEditor {
         ((GraphPanel) panel).setGraph(graph);
         panel.setLayout(null);
         frame.getContentPane().add(panel);
+
 
         JCheckBox snap = new JCheckBox("Snap to grid");
         snap.setBounds(5, 10, 500, 20);
@@ -123,6 +129,31 @@ public class GraphEditor {
 
         private Graph graph;
 
+        private void createContextMenu(int mouseX, int mouseY, int X, int Y) {
+            // Check if the context menu was invoked recently
+            if (System.currentTimeMillis() - lastContextMenuTime < CONTEXT_MENU_COOLDOWN) {
+                return;
+            }
+            lastContextMenuTime = System.currentTimeMillis();
+            Node clickedNode = findClickedNode(mouseX, mouseY);
+            JPopupMenu contextMenu = new JPopupMenu();
+
+            JMenuItem deleteItem = new JMenuItem("Delete Node");
+            contextMenu.add(deleteItem);
+
+            if (clickedNode != null) {
+                contextMenu.show(this, X, Y);
+                deleteItem.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        graph.deleteNode(clickedNode.getId(), true);
+                        repaint();
+                    }
+                });
+            }
+
+        }
+
+
         public void setGraph(Graph graph) {
             this.graph = graph;
         }
@@ -186,7 +217,24 @@ public class GraphEditor {
             //create a add edge function that uses the graph.connectUnidirectionalNodes() method as argument
             //create a hoveredNodes node list, and store it publically
             // Add mouse listener for hovering over nodes make them bigger and show their name
+
             addMouseMotionListener(new MouseMotionAdapter() {
+
+                public void mouseDragged(MouseEvent e) {
+                    int deltaX = e.getX() - startX;
+                    int deltaY = e.getY() - startY;
+
+                    offsetX += deltaX;
+                    offsetY += deltaY;
+
+                    startX = e.getX();
+                    startY = e.getY();
+
+                    repaint();
+                }
+
+                //add a mouse released
+
                 public void mouseMoved(MouseEvent e) {
 
                     mouseX = (int) ((e.getX() - offsetX) / scale);
@@ -199,20 +247,32 @@ public class GraphEditor {
                         hoveredNodes.add(hoveredNode);
                         //System.out.println("hovered" + hoveredNode);
                         // Set the cursor to the hand cursor
-                        setCursor(new Cursor(Cursor.HAND_CURSOR));
+                        if (getCursor().getType() != Cursor.CROSSHAIR_CURSOR) {
+                            setCursor(new Cursor(Cursor.HAND_CURSOR));
+                        }
                     } else {
+                        //if cursor is cross hair, set it to default
+                        if (getCursor().getType() != Cursor.CROSSHAIR_CURSOR) {
+                            setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                        }
                         // Set the cursor to the move cursor
-                        setCursor(new Cursor(Cursor.MOVE_CURSOR));
                     }
                     repaint();
                 }
             });
             addMouseListener(new MouseAdapter() {
+
+
+
                 public void mousePressed(MouseEvent e) {
                     startX = e.getX();
                     startY = e.getY();
                     mouseX = (int) ((startX - offsetX) / scale);
                     mouseY = (int) ((startY - offsetY) / scale);
+
+                    if(SwingUtilities.isRightMouseButton(e)){
+                        createContextMenu(mouseX, mouseY, startX, startY);
+                    }
 
                     if (SwingUtilities.isLeftMouseButton(e)) {
                         Node clickedNode = findClickedNode(mouseX, mouseY);
@@ -224,13 +284,12 @@ public class GraphEditor {
                                 clickednodes.add(selectedNode);
                             } else {
                                 // Second node is selected
-                                Node secondNode = clickedNode;
-                                if (selectedNode != secondNode) {
+                                if (selectedNode != clickedNode) {
                                     // Create an edge between the two nodes
-                                    clickednodes.add(secondNode);
+                                    clickednodes.add(clickedNode);
                                     String edgeName = JOptionPane.showInputDialog(this, "Enter edge name:");
                                     if (edgeName != null && !edgeName.isEmpty()) {
-                                        graph.connectUnidirectionalNodes(selectedNode.getId(), secondNode.getId(), edgeName);
+                                        graph.connectUnidirectionalNodes(selectedNode.getId(), clickedNode.getId(), edgeName);
                                         repaint();
                                     }
                                     //clear the clicked nodes
@@ -254,20 +313,7 @@ public class GraphEditor {
                 }
             });
 
-            addMouseMotionListener(new MouseMotionAdapter() {
-                public void mouseDragged(MouseEvent e) {
-                    int deltaX = e.getX() - startX;
-                    int deltaY = e.getY() - startY;
 
-                    offsetX += deltaX;
-                    offsetY += deltaY;
-
-                    startX = e.getX();
-                    startY = e.getY();
-
-                    repaint();
-                }
-            });
 
             // Add mouse wheel listener for zooming
             addMouseWheelListener(new MouseWheelListener() {
