@@ -243,6 +243,7 @@ public class GraphEditor {
                     selected.clear();
                 } else {
                     System.out.println("Please select two nodes");
+                    selected.clear();
                 }
             }
         });
@@ -419,7 +420,7 @@ public class GraphEditor {
                                     if (selectedNode != clickedNode) {
                                         // Create an edge between the two nodes
                                         clickednodes.add(clickedNode);
-                                        String edgeName = JOptionPane.showInputDialog(this, "Enter edge name:");
+                                        String edgeName = JOptionPane.showInputDialog("Creating edge from node " + clickedNode.getId().toString() + " to node " + selectedNode.getId().toString(), "Enter edge name:");
                                         if (edgeName != null && !edgeName.isEmpty()) {
                                             graph.connectUnidirectionalNodes(selectedNode.getId(), clickedNode.getId(), edgeName);
                                             repaint();
