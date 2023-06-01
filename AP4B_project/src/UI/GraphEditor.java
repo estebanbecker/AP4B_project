@@ -7,6 +7,7 @@ import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GraphEditor {
@@ -36,7 +37,7 @@ public class GraphEditor {
             }
         });
     }
-    
+
     public static void createAndShowGUI(Graph graph) {
         //setup flatlaf
         try {
@@ -119,6 +120,19 @@ public class GraphEditor {
     private static class GraphPanel extends JPanel {
         private HashMap<Integer, Node> nodes;
 
+        private Node findClickedNode(int mouseX, int mouseY) {
+            for (Node node : nodes.values()) {
+                float x = node.getPosition()[0];
+                float y = node.getPosition()[1];
+
+                // Check if the mouse click is inside the node bounds
+                if (Math.abs(mouseX - x) <= 10 && Math.abs(mouseY - y) <= 10) {
+                    return node;
+                }
+            }
+            return null;
+        }
+
         private int offsetX = 100; // X offset for dragging
 
 
@@ -140,14 +154,71 @@ public class GraphEditor {
         private int startX; // Start X position for dragging
         private int startY; // Start Y position for dragging
 
+        private int mouseX;
+        private int mouseY;
+
+        public float getMouseX() {
+            return mouseX;
+        }
+
+        public float getMouseY() {
+            return mouseY;
+        }
+
+        //put the hovered nodes in a list
+        private ArrayList<Node> hoveredNodes = new ArrayList<Node>();
+
         //Create a Graph Editor method
         public void GraphEditor() {
-            // Add mouse listener for dragging
+
+            //create a hoveredNodes node list, and store it publically
+            // Add mouse listener for hovering over nodes make them bigger and show their name
+            addMouseMotionListener(new MouseMotionAdapter() {
+                public void mouseMoved(MouseEvent e) {
+
+                    mouseX = (int) ((e.getX() - offsetX) / scale);
+                    mouseY = (int) ((e.getY() - offsetY) / scale);
+
+                    Node hoveredNode = findClickedNode(mouseX, mouseY);
+                    //if hovered node, make it bigger and show name
+                    //if not, remove the bigger node and name
+                    if (hoveredNode != null) {
+                        hoveredNodes.add(hoveredNode);
+                        System.out.println("hovered" + hoveredNode);
+                        // Set the cursor to the hand cursor
+                        setCursor(new Cursor(Cursor.HAND_CURSOR));
+                    } else {
+                        // Set the cursor to the move cursor
+                        setCursor(new Cursor(Cursor.MOVE_CURSOR));
+                    }
+                    repaint();
+                }
+            });
             addMouseListener(new MouseAdapter() {
                 public void mousePressed(MouseEvent e) {
                     startX = e.getX();
                     startY = e.getY();
-                }
+                    mouseX = (int) ((startX - offsetX) / scale);
+                    mouseY = (int) ((startY - offsetY) / scale);
+
+                    if (SwingUtilities.isLeftMouseButton(e)) {
+                       
+                            Node clickedNode = findClickedNode(mouseX, mouseY);
+                
+                            if (clickedNode != null) {
+                                // Set the selected node
+                                System.out.println("selected" + clickedNode);
+
+                                // Set the cursor to the hand cursor
+                                setCursor(new Cursor(Cursor.HAND_CURSOR));
+                            } else {
+                                // Set the cursor to the move cursor
+                                System.out.println("nothing ");
+                                setCursor(new Cursor(Cursor.MOVE_CURSOR));
+                            }
+                    
+                        }
+                    }
             });
 
             addMouseMotionListener(new MouseMotionAdapter() {
@@ -224,6 +295,7 @@ public class GraphEditor {
             g2d.translate(offsetX, offsetY);
             g2d.scale(scale, scale);
 
+
             //draw a grid in X+- and Y+- directions
             g2d.setColor(Color.LIGHT_GRAY);
             for (int i = -2000; i < 2000; i += 50) {
@@ -237,7 +309,6 @@ public class GraphEditor {
 
 
             g2d.setStroke(new BasicStroke(2.0f));
-
 
             for (Node node : nodes.values()) {
             int x1 = Math.round(node.getPosition()[0]);
@@ -286,8 +357,16 @@ public class GraphEditor {
                     }
                 }
             }
-
-            // Reset transformations
+            //go through the hovered node list and draw a circle around the node
+            for (Node hoveredNode : hoveredNodes) {
+                Node node = nodes.get(hoveredNode.getId());
+                int x1 = Math.round(node.getPosition()[0]);
+                int y1 = Math.round(node.getPosition()[1]);
+                //dark forest green
+                g2d.setColor(new Color(34, 139, 34));
+                g2d.drawOval(x1 - 10, y1 - 10, 20, 20);
+            }
+            hoveredNodes.clear();
             g2d.scale(1.0 / scale, 1.0 / scale);
             g2d.translate(-offsetX, -offsetY);
         }
@@ -314,6 +393,7 @@ public class GraphEditor {
          * g2d.fillPolygon(new int[]{x2, x3, x4}, new int[]{y2, y3, y4}, 3);
          * }
          */
+
         public Dimension getPreferredSize() {
             return new Dimension(1200, 800);
         }
