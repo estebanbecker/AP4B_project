@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GraphEditor {
+
     private static void addNodeOnClick(JPanel panel, Graph graph, boolean selected) {
         // Change cursor to crosshair
         panel.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
@@ -51,6 +52,7 @@ public class GraphEditor {
         frame.setLocationRelativeTo(null);
 
         JPanel panel = new GraphPanel(graph.getNodes());
+        ((GraphPanel) panel).setGraph(graph);
         panel.setLayout(null);
         frame.getContentPane().add(panel);
 
@@ -118,6 +120,13 @@ public class GraphEditor {
     }
 
     private static class GraphPanel extends JPanel {
+
+        private Graph graph;
+
+        public void setGraph(Graph graph) {
+            this.graph = graph;
+        }
+
         private HashMap<Integer, Node> nodes;
 
         private Node findClickedNode(int mouseX, int mouseY) {
@@ -165,12 +174,16 @@ public class GraphEditor {
             return mouseY;
         }
 
+        private Node selectedNode;
+
         //put the hovered nodes in a list
         private ArrayList<Node> hoveredNodes = new ArrayList<Node>();
 
+        private ArrayList<Node> clickednodes = new ArrayList<Node>();
         //Create a Graph Editor method
-        public void GraphEditor() {
+        public void GraphEditor(){
 
+            //create a add edge function that uses the graph.connectUnidirectionalNodes() method as argument
             //create a hoveredNodes node list, and store it publically
             // Add mouse listener for hovering over nodes make them bigger and show their name
             addMouseMotionListener(new MouseMotionAdapter() {
@@ -184,7 +197,7 @@ public class GraphEditor {
                     //if not, remove the bigger node and name
                     if (hoveredNode != null) {
                         hoveredNodes.add(hoveredNode);
-                        System.out.println("hovered" + hoveredNode);
+                        //System.out.println("hovered" + hoveredNode);
                         // Set the cursor to the hand cursor
                         setCursor(new Cursor(Cursor.HAND_CURSOR));
                     } else {
@@ -202,23 +215,43 @@ public class GraphEditor {
                     mouseY = (int) ((startY - offsetY) / scale);
 
                     if (SwingUtilities.isLeftMouseButton(e)) {
-                       
-                            Node clickedNode = findClickedNode(mouseX, mouseY);
-                
-                            if (clickedNode != null) {
-                                // Set the selected node
-                                System.out.println("selected" + clickedNode);
+                        Node clickedNode = findClickedNode(mouseX, mouseY);
 
-                                // Set the cursor to the hand cursor
-                                setCursor(new Cursor(Cursor.HAND_CURSOR));
+                        if (clickedNode != null) {
+                            if (selectedNode == null) {
+                                // First node is selected
+                                selectedNode = clickedNode;
+                                clickednodes.add(selectedNode);
                             } else {
-                                // Set the cursor to the move cursor
-                                System.out.println("nothing ");
-                                setCursor(new Cursor(Cursor.MOVE_CURSOR));
+                                // Second node is selected
+                                Node secondNode = clickedNode;
+                                if (selectedNode != secondNode) {
+                                    // Create an edge between the two nodes
+                                    clickednodes.add(secondNode);
+                                    String edgeName = JOptionPane.showInputDialog(this, "Enter edge name:");
+                                    if (edgeName != null && !edgeName.isEmpty()) {
+                                        graph.connectUnidirectionalNodes(selectedNode.getId(), secondNode.getId(), edgeName);
+                                        repaint();
+                                    }
+                                    //clear the clicked nodes
+                                    clickednodes.clear();
+                                    // Reset the selected nodes
+                                    selectedNode = null;
+                                    // Repaint the graph
+                                    repaint();
+                                } else {
+                                    // If the same node is selected, reset the selection
+                                    clickednodes.remove(selectedNode);
+                                    selectedNode = null;
+                                }
                             }
-                    
+                        } else {
+                            // No node is clicked, reset the selection
+                            clickednodes.remove(selectedNode);
+                            selectedNode = null;
                         }
                     }
+                }
             });
 
             addMouseMotionListener(new MouseMotionAdapter() {
@@ -360,6 +393,14 @@ public class GraphEditor {
             //go through the hovered node list and draw a circle around the node
             for (Node hoveredNode : hoveredNodes) {
                 Node node = nodes.get(hoveredNode.getId());
+                int x1 = Math.round(node.getPosition()[0]);
+                int y1 = Math.round(node.getPosition()[1]);
+                //dark forest green
+                g2d.setColor(new Color(34, 139, 34));
+                g2d.drawOval(x1 - 10, y1 - 10, 20, 20);
+            }
+            for (Node clicknode : clickednodes) {
+                Node node = nodes.get(clicknode.getId());
                 int x1 = Math.round(node.getPosition()[0]);
                 int y1 = Math.round(node.getPosition()[1]);
                 //dark forest green
