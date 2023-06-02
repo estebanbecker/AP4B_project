@@ -125,9 +125,9 @@ public class Graph {
     }
 
     /**
-     * Returns the neigbourghs of a node
+     * Returns the neighbors of a node
      * @param node_id       The id of the node
-     * @return              An array of the ids of the neigbourghs
+     * @return              An array of the ids of the neighbors
      */
     public Integer[] getNeighbors(Integer node_id) {
         Node node = nodes.get(node_id);
