@@ -337,12 +337,17 @@ public class GraphEditor {
                         }
                     }
                 });
-                // Add all the menus
-                edgeEditMenu.add(deleteEdge);
-                edgeEditMenu.add(labelEdge);
-                edgeMenu.add(edgeEditMenu);
+                //if no node connected, don't add the rest
+                if(edge != null){
+                    edgeEditMenu.add(deleteEdge);
+                    edgeEditMenu.add(labelEdge);
+                    edgeMenu.add(edgeEditMenu);
+                }
             }
-            contextMenu.add(edgeMenu);
+            if(edgeMenu.getItemCount() != 0){
+                contextMenu.add(edgeMenu);
+            }
+            
 
             
 
