@@ -632,6 +632,10 @@ public class GraphEditor {
                                                         "Creating edge from node " + clickedNode.getId().toString()
                                                                 + " to node " + selectedNode.getId().toString(),
                                                         DialogMessage);
+                                        if (edgeName == null) {
+                                            //quit the intent
+                                            break;
+                                        }
                                     }
                                     if (edgeName != null && !edgeName.isEmpty() && !edgeName.equals(DialogMessage)) {
                                         System.out.println(edgeName);
