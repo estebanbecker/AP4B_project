@@ -11,7 +11,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -142,9 +141,22 @@ public class GraphEditor {
         openItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // Handle the "Open" action
-                try {
-                    Desktop.getDesktop().open(new File("/path/to/open"));
-                } catch (IOException ex) {
+                //load the system file chooser
+                try{
+                JFileChooser fileChooser = new JFileChooser();
+                //native file picker
+                //fileChooser.setFileFilter(new FileNameExtensionFilter("Graph files", "graph"));
+                fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+                int result = fileChooser.showOpenDialog(frame);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = fileChooser.getSelectedFile();
+                    System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+                    Path path = Paths.get(selectedFile.getAbsolutePath());
+                    //graph.loadGraph(path);
+                    // ((GraphPanel) panel).setNodes(graph.getNodes());
+                    panel.repaint();
+                }
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
@@ -156,8 +168,18 @@ public class GraphEditor {
             public void actionPerformed(ActionEvent e) {
                 // Handle the "Save" action
                 try {
-                    Desktop.getDesktop().open(new File("/path/to/save"));
-                } catch (IOException ex) {
+                    JFileChooser fileChooser = new JFileChooser();
+                    fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+                    int result = fileChooser.showOpenDialog(frame);
+                    if (result == JFileChooser.APPROVE_OPTION) {
+                        File selectedFile = fileChooser.getSelectedFile();
+                        System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+                        Path path = Paths.get(selectedFile.getAbsolutePath());
+                        //graph.loadGraph(path);
+                        // ((GraphPanel) panel).setNodes(graph.getNodes());
+                        panel.repaint();
+                    }
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
