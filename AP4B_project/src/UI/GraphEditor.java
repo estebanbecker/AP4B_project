@@ -1,5 +1,6 @@
 package UI;
 
+import Graph.Edge;
 import Graph.Graph;
 import Graph.Node;
 import PathFinder.Dijkstra;
@@ -287,12 +288,25 @@ public class GraphEditor {
             lastContextMenuTime = System.currentTimeMillis();
             Node clickedNode = findClickedNode(mouseX, mouseY);
             JPopupMenu contextMenu = new JPopupMenu();
-
+            
             JMenuItem deleteItem = new JMenuItem("Delete Node");
             contextMenu.add(deleteItem);
+            
+
+            
+            JMenu edgeMenu = new JMenu("Edit edges");
+            HashMap<Integer, Edge> edges = clickedNode.getEdges();
+            for (Edge edge : edges.values()){
+                JMenuItem menuItem = new JMenuItem(edge.label);
+                edgeMenu.add(menuItem);
+            }
+            contextMenu.add(edgeMenu);
+
+            
 
             if (clickedNode != null) {
                 contextMenu.show(this, X, Y);
+
                 deleteItem.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         if (clickedNode == null) {
