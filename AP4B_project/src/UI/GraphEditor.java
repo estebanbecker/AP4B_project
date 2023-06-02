@@ -35,6 +35,8 @@ public class GraphEditor {
         return selected;
     }
 
+
+
     private static void addNodeOnClick(JPanel panel, Graph graph, boolean selected) {
         // Change cursor to crosshair
         panel.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
@@ -112,9 +114,11 @@ public class GraphEditor {
         frame.getContentPane().add(panel);
 
 
+
         JCheckBox snap = new JCheckBox("Snap to grid");
         snap.setBounds(5, 10, 500, 20);
         snap.setSelected(true);
+        ((GraphPanel) panel).setSnap(snap.isSelected());
         snap.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -253,6 +257,8 @@ public class GraphEditor {
 
 
         panel.add(fab);
+
+
         frame.pack();
         frame.setVisible(true);
     }
@@ -312,7 +318,7 @@ public class GraphEditor {
                 JMenuItem deleteEdge = new JMenuItem("Delete");
                 deleteEdge.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        if (clickedNode == null) {
+                        if (clickedNode != null) {
                             return;
                         }
                         graph.deleteEdge(edge.node_id_from, edge.node_id_to, true);
@@ -356,20 +362,19 @@ public class GraphEditor {
 
                 deleteItem.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        if (clickedNode == null) {
-                            return;
-                        }
-                        if(result != null){
-                            for(Integer num : result.getIntList()){
-                                if(num != null && num == clickedNode.getId()){
-                                    result = null;
-                                    break;
-                                } 
+                        if (clickedNode.getId() != null) {
+                            if (result != null) {
+                                for (Integer num : result.getIntList()) {
+                                    if (num != null && num == clickedNode.getId()) {
+                                        result = null;
+                                        break;
+                                    }
+                                }
                             }
+
+                            graph.deleteNode(clickedNode.getId(), true);
+                            repaint();
                         }
-                        
-                        graph.deleteNode(clickedNode.getId(), true);
-                        repaint();
                     }
                 });
             }
@@ -412,6 +417,15 @@ public class GraphEditor {
             return mouseY;
         }
 
+        private int dragged;
+
+        public int isDrappged() {
+            return dragged;
+        }
+
+        public void setDragged(int dragged) {
+            this.dragged = dragged;
+        }
         //Create a Graph Editor method
         public void GraphEditor() {
 
@@ -419,19 +433,62 @@ public class GraphEditor {
             //create a hoveredNodes node list, and store it publically
             // Add mouse listener for hovering over nodes make them bigger and show their name
 
+            addMouseMotionListener(new MouseAdapter() {
+
+                private Node selectedNode;
+                public void mouseMoved(MouseEvent e) {
+                    // Check if a node is clicked and assign it to selectedNode
+                    selectedNode = findClickedNode(mouseX, mouseY);
+                    if (selectedNode != null) {
+                        //System.out.println("found node to move");
+                        setDragged(0);
+                    }
+                }
+
+                public void mouseDragged(MouseEvent e) {
+                    if (selectedNode != null) {
+                        //setDragged to 1
+                        setDragged(1);
+                        //System.out.println("dragged");
+                        // Calculate the mouse movement delta
+
+                        if (SwingUtilities.isLeftMouseButton(e)) {
+
+                            super.mouseClicked(e);
+                            int x = (int) ((e.getX() - getOffsetX()) / getScale());
+                            int y = (int) ((e.getY() - getOffsetY()) / getScale());
+
+                            if (getSnap()) {
+                                x = (x + 25) / 50 * 50;
+                                y = (y + 25) / 50 * 50;
+                            }
+                            // Repaint the panel
+                            removeMouseListener(this);
+                            repaint();
+                            graph.updatePosition(selectedNode.getId(), (float) x, (float) y);
+                        }
+                    }
+                }
+
+            });
+
             addMouseMotionListener(new MouseMotionAdapter() {
 
                 public void mouseDragged(MouseEvent e) {
-                    int deltaX = e.getX() - startX;
-                    int deltaY = e.getY() - startY;
+                    if (dragged != 1) {
 
-                    offsetX += deltaX;
-                    offsetY += deltaY;
 
-                    startX = e.getX();
-                    startY = e.getY();
+                        int deltaX = e.getX() - startX;
+                        int deltaY = e.getY() - startY;
 
-                    repaint();
+                        offsetX += deltaX;
+                        offsetY += deltaY;
+
+                        startX = e.getX();
+                        startY = e.getY();
+
+                        repaint();
+                    }
                 }
 
                 //add a mouse released
@@ -517,7 +574,6 @@ public class GraphEditor {
                     }
                 }
             });
-
 
             // Add mouse wheel listener for zooming
             addMouseWheelListener(new MouseWheelListener() {
@@ -729,7 +785,14 @@ public class GraphEditor {
             return new Dimension(1200, 800);
         }
 
+        private boolean SnapToGrid = false;
+
+        public boolean getSnap() {
+            return SnapToGrid;
+        }
         public void setSnap(boolean selected) {
+            SnapToGrid = selected;
+            System.out.println("snap to grid: " + SnapToGrid);
         }
     }
 }
