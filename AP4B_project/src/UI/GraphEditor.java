@@ -10,11 +10,14 @@ import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
+
 
 public class GraphEditor {
 
@@ -24,6 +27,9 @@ public class GraphEditor {
     private static ArrayList<Node> selected = new ArrayList<Node>();
 
     private static IntFloatList result;
+
+    public static String osName = System.getProperty("os.name").toLowerCase();
+    public static int osPadding = 0;
 
     public static IntFloatList getResult() {
         return result;
@@ -106,13 +112,64 @@ public class GraphEditor {
         frame.setSize(1200, 800);
         frame.setLocationRelativeTo(null);
 
+        if(osName.contains("mac")) {
+            frame.getRootPane().putClientProperty( "apple.awt.windowTitleVisible", false );
+            frame.getRootPane().putClientProperty( "apple.awt.fullWindowContent", true );
+            frame.getRootPane().putClientProperty( "apple.awt.transparentTitleBar", true );
+            System.setProperty( "apple.laf.useScreenMenuBar", "true" );
+            osPadding = 25;
+        }
+
         JPanel panel = new GraphPanel(graph.getNodes());
         ((GraphPanel) panel).setGraph(graph);
         panel.setLayout(null);
         frame.getContentPane().add(panel);
 
+        JMenuBar menuBar = new JMenuBar();
+        JMenu fileMenu = new JMenu("File");
+
+        JMenuItem newItem = new JMenuItem("New");
+
+        newItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Handle the "New" action
+                System.out.println("New action");
+            }
+        });
+        fileMenu.add(newItem);
+
+        JMenuItem openItem = new JMenuItem("Open");
+        openItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Handle the "Open" action
+                try {
+                    Desktop.getDesktop().open(new File("/path/to/open"));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        fileMenu.add(openItem);
+
+        JMenuItem saveItem = new JMenuItem("Save");
+        saveItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Handle the "Save" action
+                try {
+                    Desktop.getDesktop().open(new File("/path/to/save"));
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        fileMenu.add(saveItem);
+
+        menuBar.add(fileMenu);
+        frame.setJMenuBar(menuBar);
+
+
         JCheckBox snap = new JCheckBox("Snap to grid");
-        snap.setBounds(5, 10, 500, 20);
+        snap.setBounds(10, 15 + osPadding, 500, 20);
         snap.setSelected(true);
         ((GraphPanel) panel).setSnap(snap.isSelected());
         snap.addActionListener(new ActionListener() {
@@ -147,7 +204,7 @@ public class GraphEditor {
                 int fabHeight = 50;
                 int padding = 10;
                 int platform;
-                String osName = System.getProperty("os.name");
+                osName = System.getProperty("os.name");
 
                 if (osName.toLowerCase().contains("mac")) {
                     platform = 25;
@@ -157,7 +214,7 @@ public class GraphEditor {
                 int frameWidth = frame.getWidth();
                 int frameHeight = frame.getHeight();
                 int fabX = frameWidth - fabWidth - padding;
-                int fabY = frameHeight - fabHeight - padding - platform;
+                int fabY = frameHeight - fabHeight - padding - platform + osPadding;
 
                 fab.setBounds(fabX, fabY, fabWidth, fabHeight);
             }
@@ -184,8 +241,8 @@ public class GraphEditor {
         JButton selectNode = new JButton("From:");
         JButton selectNode2 = new JButton("To:");
 
-        selectNode.setBounds(10, 50, 120, 30);
-        selectNode2.setBounds(10, 80, 120, 30);
+        selectNode.setBounds(10, 50 + osPadding, 120, 30);
+        selectNode2.setBounds(10, 80 + osPadding, 120, 30);
 
         selectNode.addActionListener(new ActionListener() {
             @Override
@@ -236,7 +293,7 @@ public class GraphEditor {
         JButton goButton = new JButton("go");
         goButton.setBackground(new Color(54, 143, 39));
         goButton.setForeground(Color.WHITE);
-        goButton.setBounds(10, 110, 70, 50);
+        goButton.setBounds(10, 110 + osPadding, 70, 50);
 
         goButton.addActionListener(new ActionListener() {
             @Override
@@ -434,9 +491,11 @@ public class GraphEditor {
 
             addMouseMotionListener(new MouseAdapter() {
 
+                Node big;
                 public void mouseMoved(MouseEvent e) {
                     // Check if a node is clicked and assign it to selectedNode
                     selectedNode = findClickedNode(mouseX, mouseY);
+                    big=selectedNode;
                     if (selectedNode != null) {
                         // System.out.println("found node to move");
                         setDragged(0);
@@ -444,7 +503,7 @@ public class GraphEditor {
                 }
 
                 public void mouseDragged(MouseEvent e) {
-                    if (selectedNode != null) {
+                    if (big != null) {
                         // setDragged to 1
                         setDragged(1);
                         // System.out.println("dragged");
@@ -463,7 +522,7 @@ public class GraphEditor {
                             // Repaint the panel
                             removeMouseListener(this);
                             repaint();
-                            graph.updatePosition(selectedNode.getId(), (float) x, (float) y);
+                            graph.updatePosition(big.getId(), (float) x, (float) y);
                             clickednodes.clear();
                         }
                     }
