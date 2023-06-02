@@ -20,6 +20,12 @@ public class Graph {
         this.nodes = new HashMap<Integer, Node>(nodes);
     }
 
+    /**
+     * Initializes a graph with a list of nodes
+     * @param id   A list of ids
+     * @param x     A list of x coordinates
+     * @param y    A list of y coordinates
+     */
     public Graph(Integer[] id, Float[] x, Float[] y) {
         nodes = new HashMap<Integer, Node>();
         Integer maximum_id = 0;
@@ -69,6 +75,18 @@ public class Graph {
 
         node_from.addEdge(node2, label, weight);
         node_to.addEdge(node1, label, weight);
+    }
+
+    /**
+     * Creates edges from a list of node ids and labels
+     * @param node_from_id      The ids of the nodes from which the edges start
+     * @param node_to_id    The ids of the nodes to which the edges end
+     * @param label        The labels of the edges
+     */
+    public void createEdges(Integer[] node_from_id, Integer[] node_to_id, String[] label) {
+        for (int i = 0; i < node_from_id.length; i++) {
+            connectUnidirectionalNodes(node_from_id[i], node_to_id[i], label[i]);
+        }
     }
 
     /**
@@ -223,7 +241,6 @@ public class Graph {
     public Integer[] getAllNodesId (){
         return nodes.keySet().toArray(new Integer[0]);
     }
-
 
 
 }
