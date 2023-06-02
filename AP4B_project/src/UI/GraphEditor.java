@@ -304,7 +304,7 @@ public class GraphEditor {
                 // Add en entry for the edge
                 JMenu edgeEditMenu = new JMenu(edge.label);
                 
-                /*
+                
                 // Add a submenu to delete the edge
                 JMenuItem deleteEdge = new JMenuItem("Delete");
                 deleteEdge.addActionListener(new ActionListener() {
@@ -312,11 +312,11 @@ public class GraphEditor {
                         if (clickedNode == null) {
                             return;
                         }
-                    
+                        graph.deleteEdge(edge.node_id_from, edge.node_id_to, true);
                         repaint();
                     }
                 });
-                */
+                
 
                 // Add a submenu to rename the edge
                 JMenuItem labelEdge = new JMenuItem("Rename");
@@ -328,39 +328,14 @@ public class GraphEditor {
                         
                         String DialogMessage = "Enter edge name:";
                         String edgeName = JOptionPane.showInputDialog("Input new name for edge " + edge.label + " :", DialogMessage);
-                        if (edgeName != null && !edgeName.isEmpty() && edgeName != DialogMessage) {
-                            edge.label = edgeName;
-
-                            // Check if edge is bidirectional
-                            Node end_node = nodes.get(edge.node_id_to);
-                            HashMap<Integer, Edge> end_node_edges = end_node.getEdges();
-                            if(end_node_edges.containsKey(clickedNode.getId())){
-                                System.out.println("Bidirectional edge\n");
-                                end_node_edges.get(clickedNode.getId()).label = edgeName;
-                            }
-
+                        if (edgeName != null && !edgeName.isEmpty() && edgeName != DialogMessage) {                            
+                            graph.updateEdgeName(edge.node_id_from, edge.node_id_to, edgeName);
                             repaint();
                         }
                     }
                 });
-
-                
-
-                if (clickedNode != null) {
-                contextMenu.show(this, X, Y);
-
-                deleteItem.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        if (clickedNode == null) {
-                            return;
-                        }
-                        graph.deleteNode(clickedNode.getId(), true);
-                        repaint();
-                    }
-                });
-            }
                 // Add all the menus
-                //edgeEditMenu.add(deleteEdge);
+                edgeEditMenu.add(deleteEdge);
                 edgeEditMenu.add(labelEdge);
                 edgeMenu.add(edgeEditMenu);
             }
@@ -381,7 +356,6 @@ public class GraphEditor {
                     }
                 });
             }
-
         }
 
         public void setGraph(Graph graph) {
