@@ -18,24 +18,21 @@ import java.util.concurrent.CompletableFuture;
 
 public class GraphEditor {
 
-
     private static final int CONTEXT_MENU_COOLDOWN = 1000; // Cooldown period in milliseconds
     private static long lastContextMenuTime = 0; // Last time the context menu was invoked
 
     private static ArrayList<Node> selected = new ArrayList<Node>();
-    
+
     private static IntFloatList result;
 
     public static IntFloatList getResult() {
         return result;
     }
 
-    //Create getter for selected
+    // Create getter for selected
     public static ArrayList<Node> getSelected() {
         return selected;
     }
-
-
 
     private static void addNodeOnClick(JPanel panel, Graph graph, boolean selected) {
         // Change cursor to crosshair
@@ -77,8 +74,10 @@ public class GraphEditor {
                 @Override
                 public void mouseReleased(MouseEvent e) {
                     if (SwingUtilities.isLeftMouseButton(e)) {
-                        int x = (int) ((e.getX() - ((GraphPanel) panel).getOffsetX()) / ((GraphPanel) panel).getScale());
-                        int y = (int) ((e.getY() - ((GraphPanel) panel).getOffsetY()) / ((GraphPanel) panel).getScale());
+                        int x = (int) ((e.getX() - ((GraphPanel) panel).getOffsetX())
+                                / ((GraphPanel) panel).getScale());
+                        int y = (int) ((e.getY() - ((GraphPanel) panel).getOffsetY())
+                                / ((GraphPanel) panel).getScale());
 
                         Node clickedNode = ((GraphPanel) panel).findClickedNode(x, y);
 
@@ -95,9 +94,8 @@ public class GraphEditor {
         }
     }
 
-
     public static void createAndShowGUI(Graph graph) {
-        //setup flatlaf
+        // setup flatlaf
         try {
             FlatMacLightLaf.setup();
         } catch (Exception e) {
@@ -112,8 +110,6 @@ public class GraphEditor {
         ((GraphPanel) panel).setGraph(graph);
         panel.setLayout(null);
         frame.getContentPane().add(panel);
-
-
 
         JCheckBox snap = new JCheckBox("Snap to grid");
         snap.setBounds(5, 10, 500, 20);
@@ -141,7 +137,7 @@ public class GraphEditor {
                 }
             }
         });
-        //add a checkbox for snapping
+        // add a checkbox for snapping
 
         // Add a ComponentListener to reset FAB position on window resize
         frame.addComponentListener(new ComponentAdapter() {
@@ -174,17 +170,15 @@ public class GraphEditor {
 
         fab.setBounds(fabX, fabY, fabWidth, fabHeight);
 
-
-        //add two buttons with an eyedropper icon that allow the user to select a node
+        // add two buttons with an eyedropper icon that allow the user to select a node
         Node[] pathway_nodes = new Node[2];
-
 
         JButton selectNode = new JButton("From:");
         JButton selectNode2 = new JButton("To:");
 
         selectNode.setBounds(10, 50, 120, 30);
         selectNode2.setBounds(10, 80, 120, 30);
-        
+
         selectNode.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -192,11 +186,11 @@ public class GraphEditor {
                     System.out.println("Selected node: " + node);
                     pathway_nodes[0] = node;
                     selectNode.setText(node.getId().toString());
-                    if(selectNode2.getText() == "To:"){
+                    if (selectNode2.getText() == "To:") {
                         selectNode2.doClick();
                     }
                 });
-                
+
             }
         });
         selectNode2.addActionListener(new ActionListener() {
@@ -214,15 +208,16 @@ public class GraphEditor {
         panel.add(selectNode);
         panel.add(selectNode2);
 
-        //add an eye dropper icon on the side of the button
+        // add an eye dropper icon on the side of the button
         Path path = Paths.get("AP4B_project/asset/eyedropper.png");
-        Icon eyeDropperIcon = new ImageIcon("AP4B_project/asset/eyedropper.png"); // Replace "eye_dropper_icon.png" with the actual path or resource name
-        //scale the icon
+        Icon eyeDropperIcon = new ImageIcon("AP4B_project/asset/eyedropper.png"); // Replace "eye_dropper_icon.png" with
+                                                                                  // the actual path or resource name
+        // scale the icon
         Image img = ((ImageIcon) eyeDropperIcon).getImage();
         Image newimg = img.getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH);
         eyeDropperIcon = new ImageIcon(newimg);
 
-        //put the icon to the very right
+        // put the icon to the very right
         selectNode.setHorizontalTextPosition(SwingConstants.LEFT);
         selectNode2.setHorizontalTextPosition(SwingConstants.LEFT);
         // Set the eye dropper icon to the button
@@ -238,26 +233,24 @@ public class GraphEditor {
         goButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                    result = null;
-                    Dijkstra solver = new Dijkstra();
-                    try{
-                        result = solver.findShortestPath(graph, pathway_nodes[0].getId(), pathway_nodes[1].getId());
-                    } catch (Exception Error){
-                        // Handle the exception and show an error message
-                        String errorMessage = "An error occurred: " + Error.getMessage();
-                        
-                        // Show the error message to the user
-                        JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
-                    }
+                result = null;
+                Dijkstra solver = new Dijkstra();
+                try {
+                    result = solver.findShortestPath(graph, pathway_nodes[0].getId(), pathway_nodes[1].getId());
+                } catch (Exception Error) {
+                    // Handle the exception and show an error message
+                    String errorMessage = "An error occurred: " + Error.getMessage();
+
+                    // Show the error message to the user
+                    JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
         panel.add(goButton);
 
-        //if result =! null, create a text area and display the result
-
+        // if result =! null, create a text area and display the result
 
         panel.add(fab);
-
 
         frame.pack();
         frame.setVisible(true);
@@ -266,7 +259,7 @@ public class GraphEditor {
     protected static class GraphPanel extends JPanel {
 
         private final HashMap<Integer, Node> nodes;
-        //put the hovered nodes in a list
+        // put the hovered nodes in a list
         private final ArrayList<Node> hoveredNodes = new ArrayList<Node>();
         private final ArrayList<Node> clickednodes = new ArrayList<Node>();
 
@@ -292,15 +285,14 @@ public class GraphEditor {
             }
             lastContextMenuTime = System.currentTimeMillis();
             Node clickedNode = findClickedNode(mouseX, mouseY);
-            if(clickedNode == null){
+            if (clickedNode == null) {
                 return;
             }
-            
+
             JPopupMenu contextMenu = new JPopupMenu();
-            
+
             JMenuItem deleteItem = new JMenuItem("Delete Node");
             contextMenu.add(deleteItem);
-            
 
             // Add the edge editing submenu
             JMenu edgeMenu = new JMenu("Edit edges");
@@ -309,11 +301,10 @@ public class GraphEditor {
             HashMap<Integer, Edge> edges = clickedNode.getEdges();
 
             // Iterates through the node's connected edges
-            for (Edge edge : edges.values()){
+            for (Edge edge : edges.values()) {
                 // Add en entry for the edge
                 JMenu edgeEditMenu = new JMenu(edge.label);
-                
-                
+
                 // Add a submenu to delete the edge
                 JMenuItem deleteEdge = new JMenuItem("Delete");
                 deleteEdge.addActionListener(new ActionListener() {
@@ -325,7 +316,6 @@ public class GraphEditor {
                         repaint();
                     }
                 });
-                
 
                 // Add a submenu to rename the edge
                 JMenuItem labelEdge = new JMenuItem("Rename");
@@ -334,28 +324,26 @@ public class GraphEditor {
                         if (clickedNode == null) {
                             return;
                         }
-                        
+
                         String DialogMessage = "Enter edge name:";
-                        String edgeName = JOptionPane.showInputDialog("Input new name for edge " + edge.label + " :", DialogMessage);
-                        if (edgeName != null && !edgeName.isEmpty() && !edgeName.equals(DialogMessage)) {                            
+                        String edgeName = JOptionPane.showInputDialog("Input new name for edge " + edge.label + " :",
+                                DialogMessage);
+                        if (edgeName != null && !edgeName.isEmpty() && !edgeName.equals(DialogMessage)) {
                             graph.updateEdgeName(edge.node_id_from, edge.node_id_to, edgeName);
                             repaint();
                         }
                     }
                 });
-                //if no node connected, don't add the rest
-                if(edge != null){
+                // if no node connected, don't add the rest
+                if (edge != null) {
                     edgeEditMenu.add(deleteEdge);
                     edgeEditMenu.add(labelEdge);
                     edgeMenu.add(edgeEditMenu);
                 }
             }
-            if(edgeMenu.getItemCount() != 0){
+            if (edgeMenu.getItemCount() != 0) {
                 contextMenu.add(edgeMenu);
             }
-            
-
-            
 
             if (clickedNode != null) {
                 contextMenu.show(this, X, Y);
@@ -426,30 +414,32 @@ public class GraphEditor {
         public void setDragged(int dragged) {
             this.dragged = dragged;
         }
-        //Create a Graph Editor method
+
+        // Create a Graph Editor method
         public void GraphEditor() {
 
-            //create a add edge function that uses the graph.connectUnidirectionalNodes() method as argument
-            //create a hoveredNodes node list, and store it publically
-            // Add mouse listener for hovering over nodes make them bigger and show their name
+            // create a add edge function that uses the graph.connectUnidirectionalNodes()
+            // method as argument
+            // create a hoveredNodes node list, and store it publically
+            // Add mouse listener for hovering over nodes make them bigger and show their
+            // name
 
             addMouseMotionListener(new MouseAdapter() {
 
-                private Node selectedNode;
                 public void mouseMoved(MouseEvent e) {
                     // Check if a node is clicked and assign it to selectedNode
                     selectedNode = findClickedNode(mouseX, mouseY);
                     if (selectedNode != null) {
-                        //System.out.println("found node to move");
+                        // System.out.println("found node to move");
                         setDragged(0);
                     }
                 }
 
                 public void mouseDragged(MouseEvent e) {
                     if (selectedNode != null) {
-                        //setDragged to 1
+                        // setDragged to 1
                         setDragged(1);
-                        //System.out.println("dragged");
+                        // System.out.println("dragged");
                         // Calculate the mouse movement delta
 
                         if (SwingUtilities.isLeftMouseButton(e)) {
@@ -477,7 +467,6 @@ public class GraphEditor {
                 public void mouseDragged(MouseEvent e) {
                     if (dragged != 1) {
 
-
                         int deltaX = e.getX() - startX;
                         int deltaY = e.getY() - startY;
 
@@ -491,7 +480,7 @@ public class GraphEditor {
                     }
                 }
 
-                //add a mouse released
+                // add a mouse released
 
                 public void mouseMoved(MouseEvent e) {
 
@@ -499,17 +488,17 @@ public class GraphEditor {
                     mouseY = (int) ((e.getY() - offsetY) / scale);
 
                     Node hoveredNode = findClickedNode(mouseX, mouseY);
-                    //if hovered node, make it bigger and show name
-                    //if not, remove the bigger node and name
+                    // if hovered node, make it bigger and show name
+                    // if not, remove the bigger node and name
                     if (hoveredNode != null) {
                         hoveredNodes.add(hoveredNode);
-                        //System.out.println("hovered" + hoveredNode);
+                        // System.out.println("hovered" + hoveredNode);
                         // Set the cursor to the hand cursor
                         if (getCursor().getType() != Cursor.CROSSHAIR_CURSOR) {
                             setCursor(new Cursor(Cursor.HAND_CURSOR));
                         }
                     } else {
-                        //if cursor is cross hair, set it to default
+                        // if cursor is cross hair, set it to default
                         if (getCursor().getType() != Cursor.CROSSHAIR_CURSOR) {
                             setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                         }
@@ -519,7 +508,6 @@ public class GraphEditor {
                 }
             });
             addMouseListener(new MouseAdapter() {
-
 
                 public void mousePressed(MouseEvent e) {
                     startX = e.getX();
@@ -536,42 +524,40 @@ public class GraphEditor {
 
                         if (clickedNode != null) {
                             if (getCursor().getType() != Cursor.CROSSHAIR_CURSOR) {
-
-                                if (selectedNode == null) {
-                                    // First node is selected
+                                if (clickednodes.size() == 0) {
                                     selectedNode = clickedNode;
-                                    clickednodes.add(selectedNode);
-                                } else {
-                                    // Second node is selected
-                                    if (selectedNode != clickedNode) {
-                                        // Create an edge between the two nodes
-                                        clickednodes.add(clickedNode);
-                                        String DialogMessage = "Enter edge name:";
-                                        String edgeName = DialogMessage;
-                                        while(edgeName.equals(DialogMessage)){
-                                            edgeName = JOptionPane.showInputDialog("Creating edge from node " + clickedNode.getId().toString() + " to node " + selectedNode.getId().toString(), DialogMessage);
-                                        }
-                                        if (edgeName != null && !edgeName.isEmpty() && !edgeName.equals(DialogMessage)) {
-                                            System.out.println(edgeName);
-                                            graph.connectUnidirectionalNodes(selectedNode.getId(), clickedNode.getId(), edgeName);
-                                            repaint();
-                                        }
-                                        //clear the clicked nodes
-                                        clickednodes.clear();
-                                        // Reset the selected nodes
-                                        selectedNode = null;
-                                        // Repaint the graph
-                                        repaint();
-                                    } else {
-                                        // If the same node is selected, reset the selection
-                                        clickednodes.remove(selectedNode);
-                                        selectedNode = null;
-                                    }
+                                    clickednodes.add(clickedNode);
+                                } else if (clickednodes.size() == 1 && selectedNode != clickednodes.get(0)) {
+                                    selectedNode = clickedNode;
+                                    clickednodes.add(clickedNode);
+                                } else if (clickednodes.size() == 1 && selectedNode == clickednodes.get(0)) {
+                                    selectedNode = null;
+                                    clickednodes.clear();
                                 }
-                            } else {
-                                // No node is clicked, reset the selection
-                                clickednodes.remove(selectedNode);
-                                selectedNode = null;
+
+                                else if (clickednodes.size() == 2) {
+                                    String DialogMessage = "Enter edge name:";
+                                    String edgeName = DialogMessage;
+                                    while (edgeName.equals(DialogMessage)) {
+                                        edgeName = JOptionPane
+                                                .showInputDialog(
+                                                        "Creating edge from node " + clickedNode.getId().toString()
+                                                                + " to node " + selectedNode.getId().toString(),
+                                                        DialogMessage);
+                                    }
+                                    if (edgeName != null && !edgeName.isEmpty() && !edgeName.equals(DialogMessage)) {
+                                        System.out.println(edgeName);
+                                        graph.connectUnidirectionalNodes(clickednodes.get(0).getId(),
+                                                clickednodes.get(1).getId(), edgeName);
+                                        repaint();
+                                    }
+                                    // clear the clicked nodes
+                                    clickednodes.clear();
+                                    // Reset the selected nodes
+                                    selectedNode = null;
+                                    // Repaint the graph
+                                    repaint();
+                                }
                             }
                         }
                     }
@@ -593,7 +579,7 @@ public class GraphEditor {
                     // Apply the quadratic curve to the scale factor
                     scaleFactor = Math.pow(scaleFactor, 2.0);
 
-                    //scale *= scaleFactor;
+                    // scale *= scaleFactor;
 
                     double newScale = scale * scaleFactor;
 
@@ -603,10 +589,10 @@ public class GraphEditor {
                     // Limit the scale to a reasonable range
                     if (scale < MIN_SCALE || newScale < MIN_SCALE) {
                         scale = MIN_SCALE;
-                        newScale=MIN_SCALE;
+                        newScale = MIN_SCALE;
                     } else if (scale > MAX_SCALE || newScale > MAX_SCALE) {
                         scale = MAX_SCALE;
-                        newScale=MAX_SCALE;
+                        newScale = MAX_SCALE;
                     }
                     // Calculate the offset adjustment based on the mouse position
                     int offsetXAdjustment = (int) (mouseX - mouseX * (newScale / scale));
@@ -634,20 +620,16 @@ public class GraphEditor {
             g2d.translate(offsetX, offsetY);
             g2d.scale(scale, scale);
 
-
-
-
-            //draw a grid in X+- and Y+- directions
+            // draw a grid in X+- and Y+- directions
             g2d.setColor(Color.LIGHT_GRAY);
             for (int i = -2000; i < 2000; i += 50) {
                 g2d.drawLine(i, -2000, i, 2000);
                 g2d.drawLine(-2000, i, 2000, i);
             }
 
-            //draw a red circle on the 0,0 point
+            // draw a red circle on the 0,0 point
             g2d.setColor(Color.RED);
             g2d.fillOval(-5, -5, 10, 10);
-
 
             g2d.setStroke(new BasicStroke(2.0f));
 
@@ -671,11 +653,10 @@ public class GraphEditor {
                         int endX = x2 - (int) (Math.cos(angle) * nodeRadius);
                         int endY = y2 - (int) (Math.sin(angle) * nodeRadius);
 
-
                         // Draw line with padding between the start and end of node
                         g2d.setColor(Color.BLACK);
                         g2d.drawLine(startX, startY, endX, endY);
-                        //Print the weight with a little padding (5 pixels)
+                        // Print the weight with a little padding (5 pixels)
                         // Draw arrow
                         int arrowSize = 10;
                         int arrowX1 = (int) (x2 - arrowSize * Math.cos(angle - Math.PI / 6));
@@ -683,10 +664,10 @@ public class GraphEditor {
                         int arrowX2 = (int) (x2 - arrowSize * Math.cos(angle + Math.PI / 6));
                         int arrowY2 = (int) (y2 - arrowSize * Math.sin(angle + Math.PI / 6));
 
-                        int[] arrowHeadX = {x2, arrowX1, arrowX2};
-                        int[] arrowHeadY = {y2, arrowY1, arrowY2};
+                        int[] arrowHeadX = { x2, arrowX1, arrowX2 };
+                        int[] arrowHeadY = { y2, arrowY1, arrowY2 };
                         g2d.fillPolygon(arrowHeadX, arrowHeadY, 3);
-                        //draw a little rounded rectangle with the weight of the edge
+                        // draw a little rounded rectangle with the weight of the edge
                         // Calculate the text width
                         FontMetrics fontMetrics = g2d.getFontMetrics();
                         int textWidth = fontMetrics.stringWidth(node.getEdges().get(neighborId).getLabel());
@@ -700,7 +681,7 @@ public class GraphEditor {
                         // Draw the rounded rectangle
                         g2d.setColor(new Color(241, 97, 8, 190));
                         g2d.fillRoundRect(rectX, rectY, rectWidth, rectHeight, 20, 20);
-                        //add a white border
+                        // add a white border
                         g2d.setColor(new Color(147, 60, 10, 255));
                         g2d.drawRoundRect(rectX, rectY, rectWidth, rectHeight, 20, 20);
 
@@ -712,38 +693,40 @@ public class GraphEditor {
 
                     }
                 }
-                //System.out.println("node: " + node.getId() + " edges: " + node.getEdges());
-                //get the color for a nice dark green
+                // System.out.println("node: " + node.getId() + " edges: " + node.getEdges());
+                // get the color for a nice dark green
                 g2d.setColor(new Color(0, 100, 0));
                 g2d.fillOval(x1 - 5, y1 - 5, 10, 10);
 
                 g2d.setColor(Color.BLACK);
                 g2d.drawString(Integer.toString(node.getId()), x1 + 10, y1);
             }
-            //go through the hovered node list and draw a circle around the node
+            // go through the hovered node list and draw a circle around the node
             for (Node hoveredNode : hoveredNodes) {
                 Node node = nodes.get(hoveredNode.getId());
-                if (node == null) continue;
+                if (node == null)
+                    continue;
                 int x1 = Math.round(node.getPosition()[0]);
                 int y1 = Math.round(node.getPosition()[1]);
-                //dark forest green
+                // dark forest green
                 g2d.setColor(new Color(34, 139, 34));
                 g2d.drawOval(x1 - 10, y1 - 10, 20, 20);
             }
             for (Node clicknode : clickednodes) {
                 Node node = nodes.get(clicknode.getId());
-                if(node == null) continue;
+                if (node == null)
+                    continue;
                 int x1 = Math.round(node.getPosition()[0]);
                 int y1 = Math.round(node.getPosition()[1]);
-                //dark forest green
+                // dark forest green
                 g2d.setColor(new Color(34, 139, 34));
                 g2d.drawOval(x1 - 10, y1 - 10, 20, 20);
             }
             hoveredNodes.clear();
             if (result != null) {
-                int x1=0, y1=0, x2=0, y2=0;
+                int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
                 for (int i = 0; i < result.getIntList().length - 1; i++) {
-                    //draw edges in red
+                    // draw edges in red
                     g2d.setColor(new Color(152, 70, 255, 255));
                     x1 = Math.round(nodes.get(result.getIntList()[i]).getPosition()[0]);
                     y1 = Math.round(nodes.get(result.getIntList()[i]).getPosition()[1]);
@@ -751,11 +734,12 @@ public class GraphEditor {
                     y2 = Math.round(nodes.get(result.getIntList()[i + 1]).getPosition()[1]);
                     g2d.drawLine(x1, y1, x2, y2);
 
-                    //draw string with distance
+                    // draw string with distance
                 }
                 g2d.setColor(new Color(0, 0, 0, 255));
                 g2d.setFont(new Font("Helvetica", Font.BOLD, 14));
-                g2d.drawString("distance: " + result.getFloatValue().toString() + " units", (x1 + x2) / 2 + 5, (y1 + y2) / 2 + 10);
+                g2d.drawString("distance: " + result.getFloatValue().toString() + " units", (x1 + x2) / 2 + 5,
+                        (y1 + y2) / 2 + 10);
 
             }
 
@@ -795,6 +779,7 @@ public class GraphEditor {
         public boolean getSnap() {
             return SnapToGrid;
         }
+
         public void setSnap(boolean selected) {
             SnapToGrid = selected;
             System.out.println("snap to grid: " + SnapToGrid);
