@@ -547,7 +547,10 @@ public class GraphEditor {
                                         // Create an edge between the two nodes
                                         clickednodes.add(clickedNode);
                                         String DialogMessage = "Enter edge name:";
-                                        String edgeName = JOptionPane.showInputDialog("Creating edge from node " + clickedNode.getId().toString() + " to node " + selectedNode.getId().toString(), DialogMessage);
+                                        String edgeName = DialogMessage;
+                                        while(edgeName.equals(DialogMessage)){
+                                            edgeName = JOptionPane.showInputDialog("Creating edge from node " + clickedNode.getId().toString() + " to node " + selectedNode.getId().toString(), DialogMessage);
+                                        }
                                         if (edgeName != null && !edgeName.isEmpty() && !edgeName.equals(DialogMessage)) {
                                             System.out.println(edgeName);
                                             graph.connectUnidirectionalNodes(selectedNode.getId(), clickedNode.getId(), edgeName);
@@ -720,6 +723,7 @@ public class GraphEditor {
             //go through the hovered node list and draw a circle around the node
             for (Node hoveredNode : hoveredNodes) {
                 Node node = nodes.get(hoveredNode.getId());
+                if (node == null) continue;
                 int x1 = Math.round(node.getPosition()[0]);
                 int y1 = Math.round(node.getPosition()[1]);
                 //dark forest green
@@ -728,6 +732,7 @@ public class GraphEditor {
             }
             for (Node clicknode : clickednodes) {
                 Node node = nodes.get(clicknode.getId());
+                if(node == null) continue;
                 int x1 = Math.round(node.getPosition()[0]);
                 int y1 = Math.round(node.getPosition()[1]);
                 //dark forest green
