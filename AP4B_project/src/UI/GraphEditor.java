@@ -146,10 +146,18 @@ public class GraphEditor {
                 int fabWidth = 140;
                 int fabHeight = 50;
                 int padding = 10;
+                int platform;
+                String osName = System.getProperty("os.name");
+
+                if (osName.toLowerCase().contains("mac")) {
+                    platform = 25;
+                } else {
+                    platform = 50;
+                }
                 int frameWidth = frame.getWidth();
                 int frameHeight = frame.getHeight();
                 int fabX = frameWidth - fabWidth - padding;
-                int fabY = frameHeight - fabHeight - padding - 25;
+                int fabY = frameHeight - fabHeight - padding - platform;
 
                 fab.setBounds(fabX, fabY, fabWidth, fabHeight);
             }
