@@ -309,7 +309,7 @@ public class GraphEditor {
                 JMenuItem deleteEdge = new JMenuItem("Delete");
                 deleteEdge.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        if (clickedNode != null) {
+                        if (clickedNode == null) {
                             return;
                         }
                         graph.deleteEdge(edge.node_id_from, edge.node_id_to, true);
@@ -456,6 +456,7 @@ public class GraphEditor {
                             removeMouseListener(this);
                             repaint();
                             graph.updatePosition(selectedNode.getId(), (float) x, (float) y);
+                            clickednodes.clear();
                         }
                     }
                 }
