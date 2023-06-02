@@ -200,9 +200,6 @@ public class GraphEditor {
         frame.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                int fabWidth = 140;
-                int fabHeight = 50;
-                int padding = 10;
                 int platform;
                 osName = System.getProperty("os.name");
 
@@ -211,6 +208,9 @@ public class GraphEditor {
                 } else {
                     platform = 50;
                 }
+                int fabWidth = 140 + platform;
+                int fabHeight = 50;
+                int padding = 10;
                 int frameWidth = frame.getWidth();
                 int frameHeight = frame.getHeight();
                 int fabX = frameWidth - fabWidth - padding;
@@ -279,7 +279,7 @@ public class GraphEditor {
                                                                                   // the actual path or resource name
         // scale the icon
         Image img = ((ImageIcon) eyeDropperIcon).getImage();
-        Image newimg = img.getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH);
+        Image newimg = img.getScaledInstance(15, 15, java.awt.Image.SCALE_SMOOTH);
         eyeDropperIcon = new ImageIcon(newimg);
 
         // put the icon to the very right
@@ -496,10 +496,8 @@ public class GraphEditor {
                     // Check if a node is clicked and assign it to selectedNode
                     selectedNode = findClickedNode(mouseX, mouseY);
                     big=selectedNode;
-                    if (selectedNode != null) {
-                        // System.out.println("found node to move");
-                        setDragged(0);
-                    }
+                    setDragged(0);
+                    
                 }
 
                 public void mouseDragged(MouseEvent e) {
