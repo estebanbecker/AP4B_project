@@ -293,12 +293,80 @@ public class GraphEditor {
             contextMenu.add(deleteItem);
             
 
-            
+            // Add the edge editing submenu
             JMenu edgeMenu = new JMenu("Edit edges");
+
+            // Retrieve edges from hashmap
             HashMap<Integer, Edge> edges = clickedNode.getEdges();
+
+            // Iterates through the node's connected edges
             for (Edge edge : edges.values()){
-                JMenuItem menuItem = new JMenuItem(edge.label);
-                edgeMenu.add(menuItem);
+                // Add en entry for the edge
+                JMenu edgeEditMenu = new JMenu(edge.label);
+                
+                /*
+                // Add a submenu to delete the edge
+                JMenuItem deleteEdge = new JMenuItem("Delete");
+                deleteEdge.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        if (clickedNode == null) {
+                            return;
+                        }
+                    
+                        repaint();
+                    }
+                });
+                */
+
+                // Add a submenu to rename the edge
+                JMenuItem labelEdge = new JMenuItem("Rename");
+                labelEdge.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        if (clickedNode == null) {
+                            return;
+                        }
+                        String DialogMessage = "Enter edge name:";
+                        String edgeName = JOptionPane.showInputDialog("Input new name for edge " + edge.label + " :", DialogMessage);
+                        if (edgeName != null && !edgeName.isEmpty() && edgeName != DialogMessage) {
+                            edge.label = edgeName;
+                            repaint();
+                        }
+                    }
+                });
+
+                /*
+                // Add a submenu to change the edge's weight
+                JMenuItem weightEdge = new JMenuItem("Adjust weight");
+                weightEdge.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        if (clickedNode == null) {
+                            return;
+                        }
+                        edge.weight = 420;
+                        
+                        repaint();
+                    }
+                });
+                */
+
+                if (clickedNode != null) {
+                contextMenu.show(this, X, Y);
+
+                deleteItem.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        if (clickedNode == null) {
+                            return;
+                        }
+                        graph.deleteNode(clickedNode.getId(), true);
+                        repaint();
+                    }
+                });
+            }
+                // Add all the menus
+                //edgeEditMenu.add(deleteEdge);
+                edgeEditMenu.add(labelEdge);
+                //edgeEditMenu.add(weightEdge);
+                edgeMenu.add(edgeEditMenu);
             }
             contextMenu.add(edgeMenu);
 
@@ -434,8 +502,9 @@ public class GraphEditor {
                                     if (selectedNode != clickedNode) {
                                         // Create an edge between the two nodes
                                         clickednodes.add(clickedNode);
-                                        String edgeName = JOptionPane.showInputDialog("Creating edge from node " + clickedNode.getId().toString() + " to node " + selectedNode.getId().toString(), "Enter edge name:");
-                                        if (edgeName != null && !edgeName.isEmpty()) {
+                                        String DialogMessage = "Enter edge name:";
+                                        String edgeName = JOptionPane.showInputDialog("Creating edge from node " + clickedNode.getId().toString() + " to node " + selectedNode.getId().toString(), DialogMessage);
+                                        if (edgeName != null && !edgeName.isEmpty() && edgeName != DialogMessage) {
                                             graph.connectUnidirectionalNodes(selectedNode.getId(), clickedNode.getId(), edgeName);
                                             repaint();
                                         }
