@@ -61,8 +61,8 @@ private Integer[] getPath(HashMap<Integer, Integer> previous, Integer node_to_id
 }
 
 private class NodeDistance implements Comparable<NodeDistance> {
-    private Integer nodeId;
-    private Float distance;
+    private final Integer nodeId;
+    private final Float distance;
 
     public NodeDistance(Integer nodeId, Float distance) {
         this.nodeId = nodeId;
