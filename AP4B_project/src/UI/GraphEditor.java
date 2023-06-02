@@ -787,7 +787,7 @@ public class GraphEditor {
          */
 
         public Dimension getPreferredSize() {
-            return new Dimension(1200, 800);
+            return new Dimension(800, 800);
         }
 
         private boolean SnapToGrid = false;
