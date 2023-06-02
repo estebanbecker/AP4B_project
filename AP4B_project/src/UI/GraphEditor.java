@@ -1,5 +1,6 @@
 package UI;
 
+import Graph.Edge;
 import Graph.Graph;
 import Graph.Node;
 import PathFinder.Dijkstra;
@@ -22,7 +23,7 @@ public class GraphEditor {
     private static long lastContextMenuTime = 0; // Last time the context menu was invoked
 
     private static ArrayList<Node> selected = new ArrayList<Node>();
-
+    
     private static IntFloatList result;
 
     public static IntFloatList getResult() {
@@ -171,35 +172,42 @@ public class GraphEditor {
 
 
         //add two buttons with an eyedropper icon that allow the user to select a node
+        Node[] pathway_nodes = new Node[2];
+
 
         JButton selectNode = new JButton("From:");
+        JButton selectNode2 = new JButton("To:");
+
         selectNode.setBounds(10, 50, 120, 30);
+        selectNode2.setBounds(10, 80, 120, 30);
+        
         selectNode.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 NodeSelectionHelper.selectNode(panel).thenAccept(node -> {
                     System.out.println("Selected node: " + node);
-                    selected.add(node);
+                    pathway_nodes[0] = node;
                     selectNode.setText(node.getId().toString());
+                    if(selectNode2.getText() == "To:"){
+                        selectNode2.doClick();
+                    }
                 });
-
+                
             }
         });
-        panel.add(selectNode);
-
-        JButton selectNode2 = new JButton("To:");
-        selectNode2.setBounds(10, 80, 120, 30);
         selectNode2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 NodeSelectionHelper.selectNode(panel).thenAccept(node -> {
                     System.out.println("Selected node: " + node);
-                    selected.add(node);
+                    pathway_nodes[1] = node;
                     selectNode2.setText(node.getId().toString());
                 });
 
             }
         });
+
+        panel.add(selectNode);
         panel.add(selectNode2);
 
         //add an eye dropper icon on the side of the button
@@ -226,25 +234,17 @@ public class GraphEditor {
         goButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (selected.size() == 2) {
                     result = null;
-                    System.out.println("Selected nodes: " + selected);
                     Dijkstra solver = new Dijkstra();
-
-                    result = solver.findShortestPath(graph, selected.get(0).getId(), selected.get(1).getId());
-
-                    System.out.println("Path: ");
-                    for (int i = 0; i < result.getIntList().length; i++) {
-                        System.out.println(result.getIntList()[i]);
+                    try{
+                        result = solver.findShortestPath(graph, pathway_nodes[0].getId(), pathway_nodes[1].getId());
+                    } catch (Exception Error){
+                        // Handle the exception and show an error message
+                        String errorMessage = "An error occurred: " + Error.getMessage();
+                        
+                        // Show the error message to the user
+                        JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                    System.out.println("Distance: " + result.getFloatValue());
-                    panel.repaint();
-                    //clear the selected nodes
-                    selected.clear();
-                } else {
-                    System.out.println("Please select two nodes");
-                    selected.clear();
-                }
             }
         });
         panel.add(goButton);
@@ -286,24 +286,88 @@ public class GraphEditor {
             }
             lastContextMenuTime = System.currentTimeMillis();
             Node clickedNode = findClickedNode(mouseX, mouseY);
+            if(clickedNode == null){
+                return;
+            }
+            
             JPopupMenu contextMenu = new JPopupMenu();
-
+            
             JMenuItem deleteItem = new JMenuItem("Delete Node");
             contextMenu.add(deleteItem);
+            
+
+            // Add the edge editing submenu
+            JMenu edgeMenu = new JMenu("Edit edges");
+
+            // Retrieve edges from hashmap
+            HashMap<Integer, Edge> edges = clickedNode.getEdges();
+
+            // Iterates through the node's connected edges
+            for (Edge edge : edges.values()){
+                // Add en entry for the edge
+                JMenu edgeEditMenu = new JMenu(edge.label);
+                
+                
+                // Add a submenu to delete the edge
+                JMenuItem deleteEdge = new JMenuItem("Delete");
+                deleteEdge.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        if (clickedNode == null) {
+                            return;
+                        }
+                        graph.deleteEdge(edge.node_id_from, edge.node_id_to, true);
+                        repaint();
+                    }
+                });
+                
+
+                // Add a submenu to rename the edge
+                JMenuItem labelEdge = new JMenuItem("Rename");
+                labelEdge.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        if (clickedNode == null) {
+                            return;
+                        }
+                        
+                        String DialogMessage = "Enter edge name:";
+                        String edgeName = JOptionPane.showInputDialog("Input new name for edge " + edge.label + " :", DialogMessage);
+                        if (edgeName != null && !edgeName.isEmpty() && !edgeName.equals(DialogMessage)) {                            
+                            graph.updateEdgeName(edge.node_id_from, edge.node_id_to, edgeName);
+                            repaint();
+                        }
+                    }
+                });
+                // Add all the menus
+                edgeEditMenu.add(deleteEdge);
+                edgeEditMenu.add(labelEdge);
+                edgeMenu.add(edgeEditMenu);
+            }
+            contextMenu.add(edgeMenu);
+
+            
 
             if (clickedNode != null) {
                 contextMenu.show(this, X, Y);
+
                 deleteItem.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         if (clickedNode == null) {
                             return;
                         }
+                        if(result != null){
+                            for(Integer num : result.getIntList()){
+                                if(num != null && num == clickedNode.getId()){
+                                    result = null;
+                                    break;
+                                } 
+                            }
+                        }
+                        
                         graph.deleteNode(clickedNode.getId(), true);
                         repaint();
                     }
                 });
             }
-
         }
 
         public void setGraph(Graph graph) {
@@ -420,8 +484,10 @@ public class GraphEditor {
                                     if (selectedNode != clickedNode) {
                                         // Create an edge between the two nodes
                                         clickednodes.add(clickedNode);
-                                        String edgeName = JOptionPane.showInputDialog("Creating edge from node " + clickedNode.getId().toString() + " to node " + selectedNode.getId().toString(), "Enter edge name:");
-                                        if (edgeName != null && !edgeName.isEmpty()) {
+                                        String DialogMessage = "Enter edge name:";
+                                        String edgeName = JOptionPane.showInputDialog("Creating edge from node " + clickedNode.getId().toString() + " to node " + selectedNode.getId().toString(), DialogMessage);
+                                        if (edgeName != null && !edgeName.isEmpty() && !edgeName.equals(DialogMessage)) {
+                                            System.out.println(edgeName);
                                             graph.connectUnidirectionalNodes(selectedNode.getId(), clickedNode.getId(), edgeName);
                                             repaint();
                                         }
