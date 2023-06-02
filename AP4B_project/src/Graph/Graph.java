@@ -188,7 +188,7 @@ public class Graph {
     /**
      * Delete a node
      * @param node_id The id of the node
-     * @param force  If true, delete the node even if it has edges
+     * @param force  If true, delete the node even if it has edges, if false, throw an exception if the node has edges
      */
     public void deleteNode(Integer node_id, boolean force){
        
@@ -200,7 +200,7 @@ public class Graph {
         }
 
         for (Node node_to : nodes.values()) {
-            node_to.edges.remove(node_id);
+            node_to.deleteEdge(node_id);
         }
     }
 
@@ -222,10 +222,10 @@ public class Graph {
      */
     public void deleteEdge(Integer node_id_from, Integer node_id_to, Boolean bidirectional){
         Node node_from = nodes.get(node_id_from);
-        node_from.edges.remove(node_id_to);
+        node_from.deleteEdge(node_id_to);
         if(bidirectional){
             Node node_to = nodes.get(node_id_to);
-            node_to.edges.remove(node_id_from);
+            node_to.deleteEdge(node_id_to);
         }
     }
 

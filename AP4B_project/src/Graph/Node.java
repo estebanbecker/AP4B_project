@@ -56,4 +56,8 @@ public class Node {
     public static void setLastId(Integer lastId) {
         Node.lastId = lastId;
     }
+
+    public void deleteEdge(Integer node_to_id) {
+        edges.remove(node_to_id);
+    }
 }
