@@ -234,29 +234,17 @@ public class GraphEditor {
         goButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //if (selected.size() == 2) {
                     result = null;
-                    //System.out.println("Selected nodes: " + selected);
                     Dijkstra solver = new Dijkstra();
-
-                    result = solver.findShortestPath(graph, pathway_nodes[0].getId(), pathway_nodes[1].getId());
-                    if(result != null){
-                        System.out.println("Path: ");
-                        for (int i = 0; i < result.getIntList().length; i++) {
-                            System.out.println(result.getIntList()[i]);
-                        }
-                        System.out.println("Distance: " + result.getFloatValue());
-                        panel.repaint();
-                    } else {
-                        System.out.println("No path found\n");
+                    try{
+                        result = solver.findShortestPath(graph, pathway_nodes[0].getId(), pathway_nodes[1].getId());
+                    } catch (Exception Error){
+                        // Handle the exception and show an error message
+                        String errorMessage = "An error occurred: " + Error.getMessage();
+                        
+                        // Show the error message to the user
+                        JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                    /*
-                    //clear the selected nodes
-                    selected.clear();
-                } else {
-                    System.out.println("Please select two nodes");
-                    selected.clear();
-                }*/
             }
         });
         panel.add(goButton);
