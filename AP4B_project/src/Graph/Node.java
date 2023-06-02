@@ -33,7 +33,7 @@ public class Node {
     }
 
     public void addEdge(Integer node_to_id, String label, Float weight) {
-        Edge edge= new Edge(weight, label, this.id, node_to_id);
+        Edge edge = new Edge(weight, label, this.id, node_to_id);
         edges.put(node_to_id, edge);
     }
 
@@ -55,5 +55,9 @@ public class Node {
 
     public static void setLastId(Integer lastId) {
         Node.lastId = lastId;
+    }
+
+    public void deleteEdge(Integer node_to_id) {
+        edges.remove(node_to_id);
     }
 }

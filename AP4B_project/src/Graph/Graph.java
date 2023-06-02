@@ -143,9 +143,9 @@ public class Graph {
     }
 
     /**
-     * Returns the neigbourghs of a node
+     * Returns the neighbors of a node
      * @param node_id       The id of the node
-     * @return              An array of the ids of the neigbourghs
+     * @return              An array of the ids of the neighbors
      */
     public Integer[] getNeighbors(Integer node_id) {
         Node node = nodes.get(node_id);
@@ -206,7 +206,7 @@ public class Graph {
     /**
      * Delete a node
      * @param node_id The id of the node
-     * @param force  If true, delete the node even if it has edges
+     * @param force  If true, delete the node even if it has edges, if false, throw an exception if the node has edges
      */
     public void deleteNode(Integer node_id, boolean force){
        
@@ -218,7 +218,51 @@ public class Graph {
         }
 
         for (Node node_to : nodes.values()) {
-            node_to.edges.remove(node_id);
+            node_to.deleteEdge(node_id);
+        }
+    }
+
+    /**
+     * Delete an edge, defaults to unidirectional
+     * @param node_id_from  The id of the node from which the edge starts       
+     * @param node_id_to    The id of the node to which the edge ends
+     */
+    public void deleteEdge(Integer node_id_from, Integer node_id_to){
+        deleteEdge(node_id_from, node_id_to, false);
+    }
+
+
+    /**
+     * Delete an edge
+     * @param node_id_from  The id of the node from which the edge starts       
+     * @param node_id_to    The id of the node to which the edge ends
+     * @param bidirectional Will remove edges both way if true
+     */
+    public void deleteEdge(Integer node_id_from, Integer node_id_to, Boolean bidirectional){
+        Node node_from = nodes.get(node_id_from);
+        node_from.deleteEdge(node_id_to);
+        if(bidirectional){
+            Node node_to = nodes.get(node_id_to);
+            node_to.deleteEdge(node_id_to);
+        }
+    }
+
+    /**
+     * Checks of an edge is bidirectional
+     * @param node_id_from  The id of the node from which the edge starts       
+     * @param node_id_to    The id of the node to which the edge ends
+     * @return True if bidirectional, False is there is no edge or unidirectional 
+     */
+    public Boolean isEdgeBidirectional(Integer node_id_from, Integer node_id_to){
+        Node node_to = nodes.get(node_id_to);
+        HashMap<Integer, Edge> node_to_edges = node_to.getEdges();
+        Node node_from = nodes.get(node_id_from);
+        HashMap<Integer, Edge> node_from_edges = node_from.getEdges();
+        
+        if(node_from_edges.containsKey(node_id_to) && node_to_edges.containsKey(node_id_from)){
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -230,8 +274,13 @@ public class Graph {
      */
     public void updateEdgeName(Integer node_id_from, Integer node_id_to, String label){
         Node node_from = nodes.get(node_id_from);
-        Edge edge = node_from.edges.get(node_id_to);
-        edge.label = label;
+        Edge edge_from = node_from.edges.get(node_id_to);
+        edge_from.label = label;
+        if(this.isEdgeBidirectional(node_id_from,node_id_to)){
+            Node node_to = nodes.get(node_id_to);
+            Edge edge_to = node_to.edges.get(node_id_from);
+            edge_to.label = label;
+        }
     }
 
     /**
@@ -241,6 +290,7 @@ public class Graph {
     public Integer[] getAllNodesId (){
         return nodes.keySet().toArray(new Integer[0]);
     }
+
 
 
 }
