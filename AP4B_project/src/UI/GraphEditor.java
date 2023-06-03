@@ -632,8 +632,8 @@ public class GraphEditor {
                                     while (edgeName.equals(DialogMessage)) {
                                         edgeName = JOptionPane
                                                 .showInputDialog(
-                                                        "Creating edge from node " + clickedNode.getId().toString()
-                                                                + " to node " + selectedNode.getId().toString(),
+                                                        "Creating edge from node " + clickednodes.get(0).getId().toString()
+                                                                + " to node " + clickednodes.get(1).getId().toString(),
                                                         DialogMessage);
                                         if (edgeName == null) {
                                             //quit the intent
