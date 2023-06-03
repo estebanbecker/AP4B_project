@@ -8,10 +8,13 @@ public class File {
     private String filePath;
     private String flag1;
     private String flag2;
-    private int id;
-    private int x;
-    private int y;
-    private String label;
+    private Integer[] id;
+    private Float[] x;
+    private Float[] y;
+    private Integer[] id_node_from;
+    private Integer[] id_node_to;
+    private String[] label;
+    private Float[] weight;
 
 
 
@@ -28,40 +31,68 @@ public class File {
 
             line = reader.readLine();
             if (line.equals(flag1)) { //Premier flag d'entrée
+                int i = 0;
+                line = reader.readLine();
+                do {
+                    if (!line.equals(flag2)) {
+                        id[i] = Integer.parseInt(line);
+                        line = reader.readLine();
+
+                        if (!line.equals(flag2)) {
+                            x[i] = Float.parseFloat(line);
+                            line = reader.readLine();
+                        }
+
+                        if (!line.equals(flag2)) {
+                            y[i] = Float.parseFloat(line);
+                            line = reader.readLine();
+                        }
+
+                        i++;
+                    } else {
+                        line = reader.readLine();
+                    }
+                } while (!line.equals(flag1));
 
                 line = reader.readLine();
-                if (!line.equals(flag2)) id = Integer.parseInt(line);
+                i = 0;
+                do {
+                    if (!line.equals(flag2)) {
+                        id_node_from[i] = Integer.parseInt(line);
+                        line = reader.readLine();
 
-                line = reader.readLine();
-                if (!line.equals(flag2)) x = Integer.parseInt(line);
+                        if (!line.equals(flag2)) {
+                            id_node_to[i] = Integer.parseInt(line);
+                            line = reader.readLine();
+                        }
 
-                line = reader.readLine();
-                if (!line.equals(flag2)) y = Integer.parseInt(line);
+                        if (!line.equals(flag2)) {
+                            label[i] = line;
+                            line = reader.readLine();
+                        }
 
+                        if (!line.equals(flag2)) {
+                            weight[i] = Float.parseFloat(line);
+                            line = reader.readLine();
+                        }
 
+                        i++;
+                    } else {
+                        line = reader.readLine();
+                    }
+                } while (!line.equals(flag1));
             }
-
-
-
             reader.close();
-        } catch (IOException e) {
+
+        } catch (IOException e){
             e.printStackTrace();
         }
+
+        Graph read_graph = new Graph(id,x,y);
+        read_graph.createEdges(id_node_from,id_node_to,label,weight);
+
+
     }
 
-    public int getId() {
-        return id;
-    }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public String getLabel() {
-        return label;
-    }
 }
