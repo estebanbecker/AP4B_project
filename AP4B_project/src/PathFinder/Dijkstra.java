@@ -47,7 +47,7 @@ public class Dijkstra {
     }
 
     // No path found to the destination node
-    return null;
+    throw new RuntimeException("No path found");
 }
 
 private Integer[] getPath(HashMap<Integer, Integer> previous, Integer node_to_id) {
