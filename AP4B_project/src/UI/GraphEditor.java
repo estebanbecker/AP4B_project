@@ -235,7 +235,7 @@ public class GraphEditor {
                 int padding = 10;
                 int frameWidth = frame.getWidth();
                 int frameHeight = frame.getHeight();
-                int fabX = frameWidth - fabWidth - padding;
+                int fabX = frameWidth - fabWidth - padding - platform/2; 
                 int fabY = frameHeight - fabHeight - padding - platform + osPadding;
 
                 fab.setBounds(fabX, fabY, fabWidth, fabHeight);
