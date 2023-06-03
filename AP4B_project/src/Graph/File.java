@@ -2,6 +2,8 @@ package Graph;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class File {
@@ -14,7 +16,7 @@ public class File {
     private Integer[] id_node_from;
     private Integer[] id_node_to;
     private String[] label;
-    private Float[] weight;
+
 
 
 
@@ -71,11 +73,6 @@ public class File {
                             line = reader.readLine();
                         }
 
-                        if (!line.equals(flag2)) {
-                            weight[i] = Float.parseFloat(line);
-                            line = reader.readLine();
-                        }
-
                         i++;
                     } else {
                         line = reader.readLine();
@@ -89,10 +86,44 @@ public class File {
         }
 
         Graph read_graph = new Graph(id,x,y);
-        read_graph.createEdges(id_node_from,id_node_to,label,weight);
-
-
+        read_graph.createEdges(id_node_from,id_node_to,label);
     }
 
+    public void writeFile(Graph graph) {
+        NodeData node = graph.getNodesData();
+        EdgeData edge = graph.getEdgesData();
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+
+            writer.write(flag1);
+
+            for (int i = 0; i < node.ids.length; i++) {
+                writer.write(String.valueOf(node.ids[i]));
+                writer.newLine();
+                writer.write(String.valueOf(node.xValues[i]));
+                writer.newLine();
+                writer.write(String.valueOf(node.yValues[i]));
+                writer.newLine();
+                writer.write(flag2);
+            }
+
+            writer.write(flag1);
+
+            for (int i = 0; i < edge.node_from_ids.length; i++) {
+                writer.write(String.valueOf(edge.node_from_ids[i]));
+                writer.newLine();
+                writer.write(String.valueOf(edge.node_to_ids[i]));
+                writer.newLine();
+                writer.write(edge.labels[i]);
+                writer.newLine();
+                writer.write(flag2);
+            }
+
+            writer.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
