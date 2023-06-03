@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 
@@ -223,19 +224,21 @@ public class GraphEditor {
             @Override
             public void componentResized(ComponentEvent e) {
                 int platform;
+                int winpadding = 0;
                 osName = System.getProperty("os.name");
 
                 if (osName.toLowerCase().contains("mac")) {
                     platform = 25;
                 } else {
                     platform = 50;
+                    winpadding = 25;
                 }
                 int fabWidth = 140 + platform;
                 int fabHeight = 50;
                 int padding = 10;
                 int frameWidth = frame.getWidth();
                 int frameHeight = frame.getHeight();
-                int fabX = frameWidth - fabWidth - padding - platform/2; 
+                int fabX = frameWidth - fabWidth - padding - winpadding;
                 int fabY = frameHeight - fabHeight - padding - platform + osPadding;
 
                 fab.setBounds(fabX, fabY, fabWidth, fabHeight);
@@ -273,7 +276,7 @@ public class GraphEditor {
                     System.out.println("Selected node: " + node);
                     pathway_nodes[0] = node;
                     selectNode.setText(node.getId().toString());
-                    if (selectNode2.getText() == "To:") {
+                    if (Objects.equals(selectNode2.getText(), "To:")) {
                         selectNode2.doClick();
                     }
                 });
@@ -830,8 +833,27 @@ public class GraphEditor {
                 }
                 g2d.setColor(new Color(0, 0, 0, 255));
                 g2d.setFont(new Font("Helvetica", Font.BOLD, 14));
-                g2d.drawString("distance: " + result.getFloatValue().toString() + " units", (x1 + x2) / 2 + 5,
-                        (y1 + y2) / 2 + 10);
+                FontMetrics fontMetrics = g2d.getFontMetrics();
+                int textWidth = fontMetrics.stringWidth("distance: " + result.getFloatValue().toString() + " units");
+
+                // Calculate the dimensions and position of the rectangle
+                int rectWidth = textWidth + 20; // Add some padding
+                int rectHeight = 35;
+                int rectX = (x1 + x2 - rectWidth) / 2 + 5;
+                int rectY = (y1 + y2 - rectHeight) / 2 + 10;
+
+                // Draw the rounded rectangle
+                g2d.setColor(new Color(152, 70, 255, 194));
+                g2d.fillRoundRect(rectX, rectY, rectWidth, rectHeight, 20, 20);
+                // add a white border
+                g2d.setColor(new Color(81, 45, 110, 255));
+                g2d.drawRoundRect(rectX, rectY, rectWidth, rectHeight, 20, 20);
+
+                // Draw the text centered within the rectangle
+                g2d.setColor(Color.BLACK);
+                int textX = rectX + (rectWidth - textWidth) / 2;
+                int textY = rectY + (rectHeight - fontMetrics.getHeight()) / 2 + fontMetrics.getAscent();
+                g2d.drawString("distance: " + result.getFloatValue().toString() + " units", textX, textY);
 
             }
 
