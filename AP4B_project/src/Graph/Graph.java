@@ -1,6 +1,7 @@
 package Graph;
 
 import java.util.HashMap;
+import java.util.ArrayList;
 
 public class Graph {
     HashMap<Integer, Node> nodes;
@@ -291,6 +292,40 @@ public class Graph {
         return nodes.keySet().toArray(new Integer[0]);
     }
 
+    /**
+     * Return all the data of the nodes
+     * @return NodeData object
+     */
+    public NodeData getNodesData() {
+        Integer[] ids = nodes.keySet().toArray(new Integer[0]);
+        Float[] xValues = new Float[ids.length];
+        Float[] yValues = new Float[ids.length];
+        for (int i = 0; i < ids.length; i++) {
+            Node node = nodes.get(ids[i]);
+            xValues[i] = node.getPosition()[0];
+            yValues[i] = node.getPosition()[1];
+        }
+        return new NodeData(ids, xValues, yValues);
+    }
 
-
+    /**
+     * Return all the data of the edges
+     * @return EdgeData object
+     */
+    public EdgeData getEdgesData() {
+        ArrayList<Integer> nodeFrom = new ArrayList<>();
+        ArrayList<Integer> nodeTo = new ArrayList<>();
+        ArrayList<Float> weights = new ArrayList<>();
+        ArrayList<String> labels = new ArrayList<>();
+        for (Node node : nodes.values()) {
+            for (Edge edge : node.edges.values()) {
+                nodeFrom.add(node.id);
+                nodeTo.add(edge.node_id_to);
+                weights.add(edge.weight);
+                labels.add(edge.label);
+            }
+        }
+        return new EdgeData(nodeFrom.toArray(new Integer[0]), nodeTo.toArray(new Integer[0]), weights.toArray(new Float[0]), labels.toArray(new String[0]));
+    }
 }
+
