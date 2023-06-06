@@ -158,8 +158,6 @@ public class GraphEditor {
                     Files open_file = new Files(path.toString());
                     open_file.readFile();
 
-                    //graph.loadGraph(path);
-                    //((GraphPanel) panel).setNodes(graph.getNodes());
                     panel.repaint();
                 }
                 } catch (Exception ex) {
