@@ -156,7 +156,7 @@ public class GraphEditor {
                     Path path = Paths.get(selectedFile.getAbsolutePath());
 
                     Files open_file = new Files(path.toString());
-                    open_file.readFile();
+                    ((GraphPanel) panel).setGraph(open_file.readFile());
 
                     panel.repaint();
                 }
@@ -181,7 +181,7 @@ public class GraphEditor {
                         Path path = Paths.get(selectedFile.getAbsolutePath());
 
                         Files save_file = new Files(path.toString());
-                        save_file.writeFile(graph);
+                        save_file.writeFile(((GraphPanel) panel).graph);
 
                         //graph.loadGraph(path);
                         // ((GraphPanel) panel).setNodes(graph.getNodes());

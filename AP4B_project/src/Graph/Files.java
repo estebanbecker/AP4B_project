@@ -25,7 +25,7 @@ public class Files {
         this.filePath = filePath;
     }
 
-    public void readFile() {
+    public Graph readFile() {
         System.out.println("entree read");
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
@@ -97,6 +97,8 @@ public class Files {
 
         Graph read_graph = new Graph(id_array,x_array,y_array);
         read_graph.createEdges(id_node_from_array,id_node_to_array,label_array);
+
+        return read_graph;
     }
 
     public void writeFile(Graph graph) {
@@ -108,12 +110,12 @@ public class Files {
             writer.write(flag1);
             writer.newLine();
 
-            for (int i = 0; i < node.ids.length; i++) {
-                writer.write(String.valueOf(id.get(i)));
+            for (int i = 0; i < node.getlength(); i++) {
+                writer.write(String.valueOf(node.ids[i]));
                 writer.newLine();
-                writer.write(String.valueOf(x.get(i)));
+                writer.write(String.valueOf(node.xValues[i]));
                 writer.newLine();
-                writer.write(String.valueOf(y.get(i)));
+                writer.write(String.valueOf(node.yValues[i]));
                 writer.newLine();
                 writer.write(flag2);
                 writer.newLine();
@@ -123,11 +125,11 @@ public class Files {
             writer.newLine();
 
             for (int i = 0; i < edge.node_from_ids.length; i++) {
-                writer.write(String.valueOf(id_node_from.get(i)));
+                writer.write(String.valueOf(edge.node_from_ids[i]));
                 writer.newLine();
-                writer.write(String.valueOf(id_node_to.get(i)));
+                writer.write(String.valueOf(edge.node_to_ids[i]));
                 writer.newLine();
-                writer.write(label.get(i));
+                writer.write(edge.labels[i]);
                 writer.newLine();
                 writer.write(flag2);
                 writer.newLine();
