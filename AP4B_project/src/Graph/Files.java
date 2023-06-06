@@ -26,7 +26,7 @@ public class Files {
     }
 
     public Graph readFile() {
-        System.out.println("entree read");
+
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
             String line;
@@ -88,12 +88,6 @@ public class Files {
         Integer[] id_node_from_array = id_node_from.toArray(new Integer[id_node_from.size()]);
         Integer[] id_node_to_array = id_node_to.toArray(new Integer[id_node_to.size()]);
         String[] label_array = label.toArray(new String[label.size()]);
-
-        for (int j=0; j<id.size(); j++){
-            System.out.println("id: " + id_array[j]);
-            System.out.println("x : " + x_array[j]);
-            System.out.println("y : " + y_array[j]);
-        }
 
         Graph read_graph = new Graph(id_array,x_array,y_array);
         read_graph.createEdges(id_node_from_array,id_node_to_array,label_array);
