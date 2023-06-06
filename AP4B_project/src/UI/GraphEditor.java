@@ -6,6 +6,7 @@ import Graph.Node;
 import PathFinder.Dijkstra;
 import PathFinder.IntFloatList;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import Graph.Files;
 
 import javax.swing.*;
 import java.awt.*;
@@ -153,8 +154,12 @@ public class GraphEditor {
                     File selectedFile = fileChooser.getSelectedFile();
                     System.out.println("Selected file: " + selectedFile.getAbsolutePath());
                     Path path = Paths.get(selectedFile.getAbsolutePath());
+
+                    Files open_file = new Files(path.toString());
+                    open_file.readFile();
+
                     //graph.loadGraph(path);
-                    // ((GraphPanel) panel).setNodes(graph.getNodes());
+                    //((GraphPanel) panel).setNodes(graph.getNodes());
                     panel.repaint();
                 }
                 } catch (Exception ex) {
@@ -176,6 +181,10 @@ public class GraphEditor {
                         File selectedFile = fileChooser.getSelectedFile();
                         System.out.println("Selected file: " + selectedFile.getAbsolutePath());
                         Path path = Paths.get(selectedFile.getAbsolutePath());
+
+                        Files save_file = new Files(path.toString());
+                        save_file.writeFile(graph);
+
                         //graph.loadGraph(path);
                         // ((GraphPanel) panel).setNodes(graph.getNodes());
                         panel.repaint();

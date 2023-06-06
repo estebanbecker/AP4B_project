@@ -6,10 +6,10 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class File {
+public class Files {
     private String filePath;
-    private String flag1;
-    private String flag2;
+    private String flag1 = "***";
+    private String flag2 = "*";
     private Integer[] id;
     private Float[] x;
     private Float[] y;
@@ -20,10 +20,8 @@ public class File {
 
 
 
-    public File(String filePath, String flag1, String flag2) {
+    public Files(String filePath) {
         this.filePath = filePath;
-        this.flag1 = flag1;
-        this.flag2 = flag2;
     }
 
     public void readFile() {
@@ -96,6 +94,7 @@ public class File {
             BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
 
             writer.write(flag1);
+            writer.newLine();
 
             for (int i = 0; i < node.ids.length; i++) {
                 writer.write(String.valueOf(node.ids[i]));
@@ -105,9 +104,11 @@ public class File {
                 writer.write(String.valueOf(node.yValues[i]));
                 writer.newLine();
                 writer.write(flag2);
+                writer.newLine();
             }
 
             writer.write(flag1);
+            writer.newLine();
 
             for (int i = 0; i < edge.node_from_ids.length; i++) {
                 writer.write(String.valueOf(edge.node_from_ids[i]));
@@ -117,6 +118,7 @@ public class File {
                 writer.write(edge.labels[i]);
                 writer.newLine();
                 writer.write(flag2);
+                writer.newLine();
             }
 
             writer.close();
