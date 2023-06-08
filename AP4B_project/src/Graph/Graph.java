@@ -178,7 +178,7 @@ public class Graph {
     }
 
     /**
-     * create a getNodes methods that returns the nodes hashmap
+     * methods that returns the nodes hashmap
      */
     public HashMap<Integer, Node> getNodes(){
         return nodes;
