@@ -109,7 +109,7 @@ public class Files {
     }
 
     /** Write a file with the current graph
-     * @param graph
+     * @param graph     the graph that will be stored in the file
      */
     public void writeFile(Graph graph) {
         NodeData node = graph.getNodesData();           //Retrieve information of the current graph
