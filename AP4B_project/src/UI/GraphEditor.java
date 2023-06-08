@@ -414,21 +414,45 @@ public class GraphEditor {
                         if (clickedNode == null) {
                             return;
                         }
-
                         String DialogMessage = "Enter edge name:";
                         String edgeName = JOptionPane.showInputDialog("Input new name for edge " + edge.label + " :",
                                 DialogMessage);
                         if (edgeName != null && !edgeName.isEmpty() && !edgeName.equals(DialogMessage)) {
+                            edge.label = edgeName;
                             graph.updateEdgeName(edge.node_id_from, edge.node_id_to, edgeName);
                             repaint();
+                        } else {
+                            private_show_error_message("Invalid input. Please enter a valid name.");
                         }
                     }
                 });
+
+                // Add a submenu change the weight of the edge
+                JMenuItem weightEdge = new JMenuItem("Change weight");
+                weightEdge.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        if (clickedNode == null) {
+                            return;
+                        }
+                        String DialogMessage = "Enter edge weight:";
+                        String weight = JOptionPane.showInputDialog("Input new weight for edge " + edge.label + " :",
+                                DialogMessage);
+                        try{
+                            int number = Integer.parseInt(weight);
+                            graph.updateEdgeWeight(edge.node_id_from, edge.node_id_to, number);
+                            repaint(); 
+                        } catch (NumberFormatException exception) {
+                            private_show_error_message("Invalid input. Please enter a valid integer.");     
+                        }                          
+                    }
+                });
+
                 // if no node connected, don't add the rest
                 if (edge != null) {
                     edgeEditMenu.add(deleteEdge);
                     edgeEditMenu.add(labelEdge);
-                    edgeMenu.add(edgeEditMenu);
+                    edgeEditMenu.add(weightEdge);
+                    edgeMenu.add(edgeEditMenu);   
                 }
             }
             if (edgeMenu.getItemCount() != 0) {
@@ -457,6 +481,10 @@ public class GraphEditor {
                 });
             }
         }
+
+        private void private_show_error_message(String error_message){
+            JOptionPane.showMessageDialog(null, error_message, "Error", JOptionPane.ERROR_MESSAGE);
+        };
 
         public void setGraph(Graph graph) {
             this.graph = graph;
@@ -636,7 +664,7 @@ public class GraphEditor {
                                                                 + " to node " + clickednodes.get(1).getId().toString(),
                                                         DialogMessage);
                                         if (edgeName == null) {
-                                            //quit the intent
+
                                             break;
                                         }
                                     }
@@ -762,6 +790,30 @@ public class GraphEditor {
                         int[] arrowHeadX = { x2, arrowX1, arrowX2 };
                         int[] arrowHeadY = { y2, arrowY1, arrowY2 };
                         g2d.fillPolygon(arrowHeadX, arrowHeadY, 3);
+                    }
+                }
+            }
+
+            for (Node node : nodes.values()) {
+                int x1 = Math.round(node.getPosition()[0]);
+                int y1 = Math.round(node.getPosition()[1]);
+
+                for (Integer neighborId : node.getEdges().keySet()) {
+                    Node neighborNode = nodes.get(neighborId);
+
+                    if (neighborNode != null) {
+                        int x2 = Math.round(neighborNode.getPosition()[0]);
+                        int y2 = Math.round(neighborNode.getPosition()[1]);
+                        double angle = Math.atan2(y2 - y1, x2 - x1);
+
+                        int nodeRadius = 5; // Adjust the radius of the node circle as needed
+
+                        // Calculate the adjusted start and end points
+                        int startX = x1 + (int) (Math.cos(angle) * nodeRadius);
+                        int startY = y1 + (int) (Math.sin(angle) * nodeRadius);
+                        int endX = x2 - (int) (Math.cos(angle) * nodeRadius);
+                        int endY = y2 - (int) (Math.sin(angle) * nodeRadius);
+
                         // draw a little rounded rectangle with the weight of the edge
                         // Calculate the text width
                         FontMetrics fontMetrics = g2d.getFontMetrics();
@@ -770,8 +822,8 @@ public class GraphEditor {
                         // Calculate the dimensions and position of the rectangle
                         int rectWidth = textWidth + 20; // Add some padding
                         int rectHeight = 35;
-                        int rectX = (startX + endX - rectWidth) / 2;
-                        int rectY = (startY + endY - rectHeight) / 2 - 10;
+                        int rectX = startX + (endX - startX - rectWidth) / 3;
+                        int rectY = startY + (endY - startY - rectHeight) / 3;
 
                         // Draw the rounded rectangle
                         g2d.setColor(new Color(241, 97, 8, 190));
@@ -796,6 +848,7 @@ public class GraphEditor {
                 g2d.setColor(Color.BLACK);
                 g2d.drawString(Integer.toString(node.getId()), x1 + 10, y1);
             }
+
             // go through the hovered node list and draw a circle around the node
             for (Node hoveredNode : hoveredNodes) {
                 Node node = nodes.get(hoveredNode.getId());

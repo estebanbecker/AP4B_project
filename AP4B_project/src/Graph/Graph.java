@@ -277,11 +277,18 @@ public class Graph {
         Node node_from = nodes.get(node_id_from);
         Edge edge_from = node_from.edges.get(node_id_to);
         edge_from.label = label;
-        if(this.isEdgeBidirectional(node_id_from,node_id_to)){
-            Node node_to = nodes.get(node_id_to);
-            Edge edge_to = node_to.edges.get(node_id_from);
-            edge_to.label = label;
-        }
+    }
+
+    /**
+     * Update the label of an edge
+     * @param node_id_from  The id of the node from which the edge starts       
+     * @param node_id_to    The id of the node to which the edge ends
+     * @param label        The new label
+     */
+    public void updateEdgeWeight(Integer node_id_from, Integer node_id_to, Integer weight){
+        Node node_from = nodes.get(node_id_from);
+        Edge edge_from = node_from.edges.get(node_id_to);
+        edge_from.weight = weight;
     }
 
     /**
