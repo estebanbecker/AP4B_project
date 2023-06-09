@@ -141,25 +141,7 @@ public class GraphEditor {
         JMenuItem openItem = new JMenuItem("Open");
         openItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Handle the "Open" action
-                //load the system file chooser
-                try{
-                JFileChooser fileChooser = new JFileChooser();
-                //native file picker
-                //fileChooser.setFileFilter(new FileNameExtensionFilter("Graph files", "graph"));
-                fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-                int result = fileChooser.showOpenDialog(frame);
-                if (result == JFileChooser.APPROVE_OPTION) {
-                    File selectedFile = fileChooser.getSelectedFile();
-                    System.out.println("Selected file: " + selectedFile.getAbsolutePath());
-                    Path path = Paths.get(selectedFile.getAbsolutePath());
-                    //graph.loadGraph(path);
-                    // ((GraphPanel) panel).setNodes(graph.getNodes());
-                    panel.repaint();
-                }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+                
             }
         });
         fileMenu.add(openItem);
@@ -299,8 +281,8 @@ public class GraphEditor {
         panel.add(selectNode2);
 
         // add an eye dropper icon on the side of the button
-        Path path = Paths.get("AP4B_project/asset/eyedropper.png");
-        Icon eyeDropperIcon = new ImageIcon("AP4B_project/asset/eyedropper.png"); // Replace "eye_dropper_icon.png" with
+        String path = "AP4B_project/asset/eyedropper.png";
+        Icon eyeDropperIcon = new ImageIcon(path); 
                                                                                   // the actual path or resource name
         // scale the icon
         Image img = ((ImageIcon) eyeDropperIcon).getImage();
@@ -735,7 +717,6 @@ public class GraphEditor {
         protected void paintComponent(Graphics g) {
             GraphEditor();
             super.paintComponent(g);
-
             Graphics2D g2d = (Graphics2D) g;
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
@@ -743,199 +724,27 @@ public class GraphEditor {
             g2d.translate(offsetX, offsetY);
             g2d.scale(scale, scale);
 
-            // draw a grid in X+- and Y+- directions
-            g2d.setColor(Color.LIGHT_GRAY);
-            for (int i = -2000; i < 2000; i += 50) {
-                g2d.drawLine(i, -2000, i, 2000);
-                g2d.drawLine(-2000, i, 2000, i);
-            }
+            Draw draw = new Draw(g2d);
 
-            // draw a red circle on the 0,0 point
-            g2d.setColor(Color.RED);
-            g2d.fillOval(-5, -5, 10, 10);
+            draw.grid();
+            draw.origin();
 
             g2d.setStroke(new BasicStroke(2.0f));
 
-            for (Node node : nodes.values()) {
-                int x1 = Math.round(node.getPosition()[0]);
-                int y1 = Math.round(node.getPosition()[1]);
-
-                for (Integer neighborId : node.getEdges().keySet()) {
-                    Node neighborNode = nodes.get(neighborId);
-
-                    if (neighborNode != null) {
-                        int x2 = Math.round(neighborNode.getPosition()[0]);
-                        int y2 = Math.round(neighborNode.getPosition()[1]);
-                        double angle = Math.atan2(y2 - y1, x2 - x1);
-
-                        int nodeRadius = 5; // Adjust the radius of the node circle as needed
-
-                        // Calculate the adjusted start and end points
-                        int startX = x1 + (int) (Math.cos(angle) * nodeRadius);
-                        int startY = y1 + (int) (Math.sin(angle) * nodeRadius);
-                        int endX = x2 - (int) (Math.cos(angle) * nodeRadius);
-                        int endY = y2 - (int) (Math.sin(angle) * nodeRadius);
-
-                        // Draw line with padding between the start and end of node
-                        g2d.setColor(Color.BLACK);
-                        g2d.drawLine(startX, startY, endX, endY);
-                        // Print the weight with a little padding (5 pixels)
-                        // Draw arrow
-                        int arrowSize = 10;
-                        int arrowX1 = (int) (x2 - arrowSize * Math.cos(angle - Math.PI / 6));
-                        int arrowY1 = (int) (y2 - arrowSize * Math.sin(angle - Math.PI / 6));
-                        int arrowX2 = (int) (x2 - arrowSize * Math.cos(angle + Math.PI / 6));
-                        int arrowY2 = (int) (y2 - arrowSize * Math.sin(angle + Math.PI / 6));
-
-                        int[] arrowHeadX = { x2, arrowX1, arrowX2 };
-                        int[] arrowHeadY = { y2, arrowY1, arrowY2 };
-                        g2d.fillPolygon(arrowHeadX, arrowHeadY, 3);
-                    }
-                }
-            }
-
-            for (Node node : nodes.values()) {
-                int x1 = Math.round(node.getPosition()[0]);
-                int y1 = Math.round(node.getPosition()[1]);
-
-                for (Integer neighborId : node.getEdges().keySet()) {
-                    Node neighborNode = nodes.get(neighborId);
-
-                    if (neighborNode != null) {
-                        int x2 = Math.round(neighborNode.getPosition()[0]);
-                        int y2 = Math.round(neighborNode.getPosition()[1]);
-                        double angle = Math.atan2(y2 - y1, x2 - x1);
-
-                        int nodeRadius = 5; // Adjust the radius of the node circle as needed
-
-                        // Calculate the adjusted start and end points
-                        int startX = x1 + (int) (Math.cos(angle) * nodeRadius);
-                        int startY = y1 + (int) (Math.sin(angle) * nodeRadius);
-                        int endX = x2 - (int) (Math.cos(angle) * nodeRadius);
-                        int endY = y2 - (int) (Math.sin(angle) * nodeRadius);
-
-                        // draw a little rounded rectangle with the weight of the edge
-                        // Calculate the text width
-                        FontMetrics fontMetrics = g2d.getFontMetrics();
-                        int textWidth = fontMetrics.stringWidth(node.getEdges().get(neighborId).getLabel());
-
-                        // Calculate the dimensions and position of the rectangle
-                        int rectWidth = textWidth + 20; // Add some padding
-                        int rectHeight = 35;
-                        int rectX = startX + (endX - startX - rectWidth) / 3;
-                        int rectY = startY + (endY - startY - rectHeight) / 3;
-
-                        // Draw the rounded rectangle
-                        g2d.setColor(new Color(241, 97, 8, 190));
-                        g2d.fillRoundRect(rectX, rectY, rectWidth, rectHeight, 20, 20);
-                        // add a white border
-                        g2d.setColor(new Color(147, 60, 10, 255));
-                        g2d.drawRoundRect(rectX, rectY, rectWidth, rectHeight, 20, 20);
-
-                        // Draw the text centered within the rectangle
-                        g2d.setColor(Color.BLACK);
-                        int textX = rectX + (rectWidth - textWidth) / 2;
-                        int textY = rectY + (rectHeight - fontMetrics.getHeight()) / 2 + fontMetrics.getAscent();
-                        g2d.drawString(node.getEdges().get(neighborId).getLabel(), textX, textY);
-
-                    }
-                }
-                // System.out.println("node: " + node.getId() + " edges: " + node.getEdges());
-                // get the color for a nice dark green
-                g2d.setColor(new Color(0, 100, 0));
-                g2d.fillOval(x1 - 5, y1 - 5, 10, 10);
-
-                g2d.setColor(Color.BLACK);
-                g2d.drawString(Integer.toString(node.getId()), x1 + 10, y1);
-            }
-
-            // go through the hovered node list and draw a circle around the node
-            for (Node hoveredNode : hoveredNodes) {
-                Node node = nodes.get(hoveredNode.getId());
-                if (node == null)
-                    continue;
-                int x1 = Math.round(node.getPosition()[0]);
-                int y1 = Math.round(node.getPosition()[1]);
-                // dark forest green
-                g2d.setColor(new Color(34, 139, 34));
-                g2d.drawOval(x1 - 10, y1 - 10, 20, 20);
-            }
-            for (Node clicknode : clickednodes) {
-                Node node = nodes.get(clicknode.getId());
-                if (node == null)
-                    continue;
-                int x1 = Math.round(node.getPosition()[0]);
-                int y1 = Math.round(node.getPosition()[1]);
-                // dark forest green
-                g2d.setColor(new Color(34, 139, 34));
-                g2d.drawOval(x1 - 10, y1 - 10, 20, 20);
-            }
+            
+            draw.all_arrows(nodes);
+            draw.nodes(nodes);
+            draw.node_circle(hoveredNodes);
+            draw.node_circle(clickednodes);
             hoveredNodes.clear();
+            
             if (result != null) {
-                int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
-                for (int i = 0; i < result.getIntList().length - 1; i++) {
-                    // draw edges in red
-                    g2d.setColor(new Color(152, 70, 255, 255));
-                    x1 = Math.round(nodes.get(result.getIntList()[i]).getPosition()[0]);
-                    y1 = Math.round(nodes.get(result.getIntList()[i]).getPosition()[1]);
-                    x2 = Math.round(nodes.get(result.getIntList()[i + 1]).getPosition()[0]);
-                    y2 = Math.round(nodes.get(result.getIntList()[i + 1]).getPosition()[1]);
-                    g2d.drawLine(x1, y1, x2, y2);
-
-                    // draw string with distance
-                }
-                g2d.setColor(new Color(0, 0, 0, 255));
-                g2d.setFont(new Font("Helvetica", Font.BOLD, 14));
-                FontMetrics fontMetrics = g2d.getFontMetrics();
-                int textWidth = fontMetrics.stringWidth("distance: " + result.getFloatValue().toString() + " units");
-
-                // Calculate the dimensions and position of the rectangle
-                int rectWidth = textWidth + 20; // Add some padding
-                int rectHeight = 35;
-                int rectX = (x1 + x2 - rectWidth) / 2 + 5;
-                int rectY = (y1 + y2 - rectHeight) / 2 + 10;
-
-                // Draw the rounded rectangle
-                g2d.setColor(new Color(152, 70, 255, 194));
-                g2d.fillRoundRect(rectX, rectY, rectWidth, rectHeight, 20, 20);
-                // add a white border
-                g2d.setColor(new Color(81, 45, 110, 255));
-                g2d.drawRoundRect(rectX, rectY, rectWidth, rectHeight, 20, 20);
-
-                // Draw the text centered within the rectangle
-                g2d.setColor(Color.BLACK);
-                int textX = rectX + (rectWidth - textWidth) / 2;
-                int textY = rectY + (rectHeight - fontMetrics.getHeight()) / 2 + fontMetrics.getAscent();
-                g2d.drawString("distance: " + result.getFloatValue().toString() + " units", textX, textY);
-
+                draw.path(result, nodes);
             }
 
             g2d.scale(1.0 / scale, 1.0 / scale);
             g2d.translate(-offsetX, -offsetY);
         }
-
-        /*
-         * private void drawArrowLine(Graphics2D g2d, int x1, int y1, int x2, int y2,
-         * int arrowSize, int lineThickness) {
-         * // Set the line thickness
-         * g2d.setStroke(new BasicStroke(lineThickness));
-         *
-         * // Draw the line
-         * g2d.drawLine(x1, y1, x2, y2);
-         *
-         * // Calculate the angle of the line
-         * double angle = Math.atan2(y2 - y1, x2 - x1);
-         *
-         * // Calculate coordinates for arrowhead
-         * int x3 = (int) (x2 - arrowSize * Math.cos(angle - Math.PI / 6));
-         * int y3 = (int) (y2 - arrowSize * Math.sin(angle - Math.PI / 6));
-         * int x4 = (int) (x2 - arrowSize * Math.cos(angle + Math.PI / 6));
-         * int y4 = (int) (y2 - arrowSize * Math.sin(angle + Math.PI / 6));
-         *
-         * // Draw the arrowhead
-         * g2d.fillPolygon(new int[]{x2, x3, x4}, new int[]{y2, y3, y4}, 3);
-         * }
-         */
 
         public Dimension getPreferredSize() {
             return new Dimension(800, 800);
