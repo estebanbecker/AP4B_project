@@ -121,7 +121,10 @@ public class GraphEditor {
 
         JMenuItem newItem = new JMenuItem("New");
 
-        newItem.addActionListener(e -> App.newProgram());
+        newItem.addActionListener(e -> {
+            // Handle the "New" action
+            App.restartProgram(new Graph());
+        });
         fileMenu.add(newItem);
 
         JMenuItem openItem = new JMenuItem("Open");
@@ -142,7 +145,7 @@ public class GraphEditor {
                     Graph new_graph = open_file.readFile();
 
                     App.restartProgram(new_graph);
-
+                    frame.dispose();
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();

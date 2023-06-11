@@ -58,6 +58,7 @@ public class App {
 
     public static void newProgram() {
         // Update the current graph with the newGraph
+        //kill the current createAndShowGUI
         SwingUtilities.invokeLater(() -> {
             createAndShowGUI(new Graph());
         });

@@ -48,7 +48,7 @@ public class Files {
 
                 line = reader.readLine();
 
-                do {                                            //The first bloc of information are the nodes
+                while (!line.equals(flag1)) {                                            //The first bloc of information are the nodes
                     if (!line.equals(flag2)) {
                         id.add(Integer.parseInt(line));
                         line = reader.readLine();
@@ -66,11 +66,11 @@ public class Files {
                         line = reader.readLine();
                     }
 
-                } while (!line.equals(flag1));
+                } 
 
                 line = reader.readLine();
-                do {                                           //The second bloc has the information of the edges
-                    if (!line.equals(flag2)) {
+                while (!line.equals(flag1)) {                                           //The second bloc has the information of the edges
+                    if (!line.equals(flag2) && !line.equals(flag1)) {
                         id_node_from.add(Integer.parseInt(line));
                         line = reader.readLine();
 
@@ -86,7 +86,7 @@ public class Files {
                     } else {
                         line = reader.readLine();
                     }
-                } while (!line.equals(flag1));
+                }
             }
             reader.close();
 
