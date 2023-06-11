@@ -799,29 +799,6 @@ public class GraphEditor {
                         int[] arrowHeadX = { x2, arrowX1, arrowX2 };
                         int[] arrowHeadY = { y2, arrowY1, arrowY2 };
                         g2d.fillPolygon(arrowHeadX, arrowHeadY, 3);
-                    }
-                }
-            }
-
-            for (Node node : nodes.values()) {
-                int x1 = Math.round(node.getPosition()[0]);
-                int y1 = Math.round(node.getPosition()[1]);
-
-                for (Integer neighborId : node.getEdges().keySet()) {
-                    Node neighborNode = nodes.get(neighborId);
-
-                    if (neighborNode != null) {
-                        int x2 = Math.round(neighborNode.getPosition()[0]);
-                        int y2 = Math.round(neighborNode.getPosition()[1]);
-                        double angle = Math.atan2(y2 - y1, x2 - x1);
-
-                        int nodeRadius = 5; // Adjust the radius of the node circle as needed
-
-                        // Calculate the adjusted start and end points
-                        int startX = x1 + (int) (Math.cos(angle) * nodeRadius);
-                        int startY = y1 + (int) (Math.sin(angle) * nodeRadius);
-                        int endX = x2 - (int) (Math.cos(angle) * nodeRadius);
-                        int endY = y2 - (int) (Math.sin(angle) * nodeRadius);
 
                         // draw a little rounded rectangle with the weight of the edge
                         // Calculate the text width
@@ -831,8 +808,8 @@ public class GraphEditor {
                         // Calculate the dimensions and position of the rectangle
                         int rectWidth = textWidth + 20; // Add some padding
                         int rectHeight = 35;
-                        int rectX = startX + (endX - startX - rectWidth) / 3;
-                        int rectY = startY + (endY - startY - rectHeight) / 3;
+                        int rectX = startX + (endX - startX - rectWidth) / 2;
+                        int rectY = startY + (endY - startY - rectHeight) / 2-10;
 
                         // Draw the rounded rectangle
                         g2d.setColor(new Color(241, 97, 8, 190));
