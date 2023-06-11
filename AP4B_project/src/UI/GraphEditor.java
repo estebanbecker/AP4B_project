@@ -1,11 +1,13 @@
 package UI;
 
 import Graph.Edge;
+import Graph.Files;
 import Graph.Graph;
 import Graph.Node;
 import PathFinder.Dijkstra;
 import PathFinder.IntFloatList;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import App.App;
 
 import javax.swing.*;
 import java.awt.*;
@@ -108,11 +110,12 @@ public class GraphEditor {
             System.err.println("Failed to initialize LaF");
         }
         JFrame frame = new JFrame("Graph Nodes");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(1200, 800);
         frame.setLocationRelativeTo(null);
+        System.out.println(osName);
 
-        if(osName.contains("mac")) {
+        if(osName.contains("mac") || osName.contains("Mac")){
             frame.getRootPane().putClientProperty( "apple.awt.windowTitleVisible", false );
             frame.getRootPane().putClientProperty( "apple.awt.fullWindowContent", true );
             frame.getRootPane().putClientProperty( "apple.awt.transparentTitleBar", true );
@@ -132,8 +135,7 @@ public class GraphEditor {
 
         newItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Handle the "New" action
-                System.out.println("New action");
+                App.newProgram();
             }
         });
         fileMenu.add(newItem);
@@ -153,9 +155,12 @@ public class GraphEditor {
                     File selectedFile = fileChooser.getSelectedFile();
                     System.out.println("Selected file: " + selectedFile.getAbsolutePath());
                     Path path = Paths.get(selectedFile.getAbsolutePath());
-                    //graph.loadGraph(path);
-                    // ((GraphPanel) panel).setNodes(graph.getNodes());
-                    panel.repaint();
+
+                    Files open_file = new Files(path.toString());
+                    Graph new_graph = open_file.readFile();
+
+                    App.restartProgram(new_graph);
+
                 }
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -176,6 +181,10 @@ public class GraphEditor {
                         File selectedFile = fileChooser.getSelectedFile();
                         System.out.println("Selected file: " + selectedFile.getAbsolutePath());
                         Path path = Paths.get(selectedFile.getAbsolutePath());
+
+                        Files save_file = new Files(path.toString());
+                        save_file.writeFile(((GraphPanel) panel).graph);
+
                         //graph.loadGraph(path);
                         // ((GraphPanel) panel).setNodes(graph.getNodes());
                         panel.repaint();

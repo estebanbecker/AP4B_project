@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 public class test {
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Swing App");
+        JFrame frame = new JFrame("Swing App.App");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JButton button = new JButton("Click me!");

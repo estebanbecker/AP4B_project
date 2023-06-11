@@ -24,4 +24,8 @@ public class NodeData {
         this.xValues = xValues;
         this.yValues = yValues;
     }
+
+    public Integer getlength(){
+        return ids.length;
+    }
 }
