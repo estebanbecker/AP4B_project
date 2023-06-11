@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
-
 public class GraphEditor {
 
     private static final int CONTEXT_MENU_COOLDOWN = 1000; // Cooldown period in milliseconds
@@ -115,11 +114,11 @@ public class GraphEditor {
         frame.setLocationRelativeTo(null);
         System.out.println(osName);
 
-        if(osName.contains("mac") || osName.contains("Mac")){
-            frame.getRootPane().putClientProperty( "apple.awt.windowTitleVisible", false );
-            frame.getRootPane().putClientProperty( "apple.awt.fullWindowContent", true );
-            frame.getRootPane().putClientProperty( "apple.awt.transparentTitleBar", true );
-            System.setProperty( "apple.laf.useScreenMenuBar", "true" );
+        if (osName.contains("mac") || osName.contains("Mac")) {
+            frame.getRootPane().putClientProperty("apple.awt.windowTitleVisible", false);
+            frame.getRootPane().putClientProperty("apple.awt.fullWindowContent", true);
+            frame.getRootPane().putClientProperty("apple.awt.transparentTitleBar", true);
+            System.setProperty("apple.laf.useScreenMenuBar", "true");
             osPadding = 25;
         }
 
@@ -144,24 +143,25 @@ public class GraphEditor {
         openItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // Handle the "Open" action
-                //load the system file chooser
-                try{
-                JFileChooser fileChooser = new JFileChooser();
-                //native file picker
-                //fileChooser.setFileFilter(new FileNameExtensionFilter("Graph files", "graph"));
-                fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-                int result = fileChooser.showOpenDialog(frame);
-                if (result == JFileChooser.APPROVE_OPTION) {
-                    File selectedFile = fileChooser.getSelectedFile();
-                    System.out.println("Selected file: " + selectedFile.getAbsolutePath());
-                    Path path = Paths.get(selectedFile.getAbsolutePath());
+                // load the system file chooser
+                try {
+                    JFileChooser fileChooser = new JFileChooser();
+                    // native file picker
+                    // fileChooser.setFileFilter(new FileNameExtensionFilter("Graph files",
+                    // "graph"));
+                    fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+                    int result = fileChooser.showOpenDialog(frame);
+                    if (result == JFileChooser.APPROVE_OPTION) {
+                        File selectedFile = fileChooser.getSelectedFile();
+                        System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+                        Path path = Paths.get(selectedFile.getAbsolutePath());
 
-                    Files open_file = new Files(path.toString());
-                    Graph new_graph = open_file.readFile();
+                        Files open_file = new Files(path.toString());
+                        Graph new_graph = open_file.readFile();
 
-                    App.restartProgram(new_graph);
+                        App.restartProgram(new_graph);
 
-                }
+                    }
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -185,7 +185,7 @@ public class GraphEditor {
                         Files save_file = new Files(path.toString());
                         save_file.writeFile(((GraphPanel) panel).graph);
 
-                        //graph.loadGraph(path);
+                        // graph.loadGraph(path);
                         // ((GraphPanel) panel).setNodes(graph.getNodes());
                         panel.repaint();
                     }
@@ -198,7 +198,6 @@ public class GraphEditor {
 
         menuBar.add(fileMenu);
         frame.setJMenuBar(menuBar);
-
 
         JCheckBox snap = new JCheckBox("Snap to grid");
         snap.setBounds(10, 15 + osPadding, 500, 20);
@@ -446,13 +445,13 @@ public class GraphEditor {
                         String DialogMessage = "Enter edge weight:";
                         String weight = JOptionPane.showInputDialog("Input new weight for edge " + edge.label + " :",
                                 DialogMessage);
-                        try{
+                        try {
                             int number = Integer.parseInt(weight);
                             graph.updateEdgeWeight(edge.node_id_from, edge.node_id_to, number);
-                            repaint(); 
+                            repaint();
                         } catch (NumberFormatException exception) {
-                            private_show_error_message("Invalid input. Please enter a valid integer.");     
-                        }                          
+                            private_show_error_message("Invalid input. Please enter a valid integer.");
+                        }
                     }
                 });
 
@@ -461,7 +460,7 @@ public class GraphEditor {
                     edgeEditMenu.add(deleteEdge);
                     edgeEditMenu.add(labelEdge);
                     edgeEditMenu.add(weightEdge);
-                    edgeMenu.add(edgeEditMenu);   
+                    edgeMenu.add(edgeEditMenu);
                 }
             }
             if (edgeMenu.getItemCount() != 0) {
@@ -491,7 +490,7 @@ public class GraphEditor {
             }
         }
 
-        private void private_show_error_message(String error_message){
+        private void private_show_error_message(String error_message) {
             JOptionPane.showMessageDialog(null, error_message, "Error", JOptionPane.ERROR_MESSAGE);
         };
 
@@ -554,12 +553,13 @@ public class GraphEditor {
             addMouseMotionListener(new MouseAdapter() {
 
                 Node big;
+
                 public void mouseMoved(MouseEvent e) {
                     // Check if a node is clicked and assign it to selectedNode
                     selectedNode = findClickedNode(mouseX, mouseY);
-                    big=selectedNode;
+                    big = selectedNode;
                     setDragged(0);
-                    
+
                 }
 
                 public void mouseDragged(MouseEvent e) {
@@ -669,7 +669,8 @@ public class GraphEditor {
                                     while (edgeName.equals(DialogMessage)) {
                                         edgeName = JOptionPane
                                                 .showInputDialog(
-                                                        "Creating edge from node " + clickednodes.get(0).getId().toString()
+                                                        "Creating edge from node "
+                                                                + clickednodes.get(0).getId().toString()
                                                                 + " to node " + clickednodes.get(1).getId().toString(),
                                                         DialogMessage);
                                         if (edgeName == null) {
@@ -809,7 +810,7 @@ public class GraphEditor {
                         int rectWidth = textWidth + 20; // Add some padding
                         int rectHeight = 35;
                         int rectX = startX + (endX - startX - rectWidth) / 2;
-                        int rectY = startY + (endY - startY - rectHeight) / 2-10;
+                        int rectY = startY + (endY - startY - rectHeight) / 2 - 10;
 
                         // Draw the rounded rectangle
                         g2d.setColor(new Color(241, 97, 8, 190));
@@ -899,29 +900,6 @@ public class GraphEditor {
             g2d.scale(1.0 / scale, 1.0 / scale);
             g2d.translate(-offsetX, -offsetY);
         }
-
-        /*
-         * private void drawArrowLine(Graphics2D g2d, int x1, int y1, int x2, int y2,
-         * int arrowSize, int lineThickness) {
-         * // Set the line thickness
-         * g2d.setStroke(new BasicStroke(lineThickness));
-         *
-         * // Draw the line
-         * g2d.drawLine(x1, y1, x2, y2);
-         *
-         * // Calculate the angle of the line
-         * double angle = Math.atan2(y2 - y1, x2 - x1);
-         *
-         * // Calculate coordinates for arrowhead
-         * int x3 = (int) (x2 - arrowSize * Math.cos(angle - Math.PI / 6));
-         * int y3 = (int) (y2 - arrowSize * Math.sin(angle - Math.PI / 6));
-         * int x4 = (int) (x2 - arrowSize * Math.cos(angle + Math.PI / 6));
-         * int y4 = (int) (y2 - arrowSize * Math.sin(angle + Math.PI / 6));
-         *
-         * // Draw the arrowhead
-         * g2d.fillPolygon(new int[]{x2, x3, x4}, new int[]{y2, y3, y4}, 3);
-         * }
-         */
 
         public Dimension getPreferredSize() {
             return new Dimension(800, 800);
