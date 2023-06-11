@@ -731,9 +731,9 @@ public class GraphEditor {
 
             g2d.setStroke(new BasicStroke(2.0f));
 
-            
             draw.all_arrows(nodes);
-            draw.nodes(nodes);
+            g2d.setColor(new Color(34, 139, 34));
+            draw.node_center(nodes);
             draw.node_circle(hoveredNodes);
             draw.node_circle(clickednodes);
             hoveredNodes.clear();
