@@ -34,8 +34,7 @@ public class Draw{
 
     // go through the hovered node list and draw a circle around the node
     public void node_center(HashMap<Integer,Node> nodes){
-        for(HashMap.Entry<Integer, Node> entry : nodes.entrySet()){
-            Node node = entry.getValue();
+        for(Node node : nodes.values()){
             if (node == null)
                 continue;
             node_center(node, 5);
@@ -66,9 +65,6 @@ public class Draw{
         int y1 = Math.round(node.getPosition()[1]);
         g2d.drawOval(x1 - radius, y1 - 10, 20, 20);
     }
-
-    
-
 
     public void path(IntFloatList result, HashMap<Integer, Node> nodes){
         int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
@@ -166,17 +162,5 @@ public class Draw{
         int[] arrowHeadX = { endX, arrowX1, arrowX2 };
         int[] arrowHeadY = { endY, arrowY1, arrowY2 };
         g2d.fillPolygon(arrowHeadX, arrowHeadY, 3);
-    }
-
-    public void nodes(HashMap<Integer, Node> nodes, int radius){
-        for (Node node : nodes.values()) {
-            int x1 = Math.round(node.getPosition()[0]);
-            int y1 = Math.round(node.getPosition()[1]);
-            // get the color for a nice dark green
-            g2d.setColor(new Color(0, 100, 0));
-            g2d.fillOval(x1 - 5, y1 - 5, 10, 10);
-            g2d.setColor(Color.BLACK);
-            g2d.drawString(Integer.toString(node.getId()), x1 + 10, y1);
-        }
     }
 }
