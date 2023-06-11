@@ -17,38 +17,43 @@ public class Dijkstra {
      * @return              A list of node ids that represent the shortest path and the distance of the path in a IntFloatList
      */
     public IntFloatList findShortestPath(Graph graph, Integer node_from_id, Integer node_to_id) {
-    PriorityQueue<NodeDistance> queue = new PriorityQueue<>();
-    HashMap<Integer, Integer> previous = new HashMap<>();
-    HashMap<Integer, Boolean> visited = new HashMap<>();
-
-    queue.add(new NodeDistance(node_from_id, 0f));
-    previous.put(node_from_id, -1);
-
-    while (!queue.isEmpty()) {
-        NodeDistance node = queue.poll();
-        visited.put(node.getNodeId(), true);
-
-        if (node.getNodeId() == node_to_id) {
-            // Found the shortest path to the destination node
-            return new IntFloatList(getPath(previous, node_to_id), node.getDistance());
-        }
-
-        Integer[] neighbors = graph.getNeighbors(node.getNodeId());
-
-        for (Integer neighborId : neighbors) {
-            if (!visited.containsKey(neighborId)) {
-                float distance = node.distance + graph.getEdgeWeight(node.getNodeId(), neighborId);
-                if (!previous.containsKey(neighborId) || distance < previous.get(neighborId)) {
-                    previous.put(neighborId, node.getNodeId());
+        PriorityQueue<NodeDistance> queue = new PriorityQueue<>();
+        HashMap<Integer, Float> distances = new HashMap<>();
+        HashMap<Integer, Integer> previous = new HashMap<>();
+    
+        queue.add(new NodeDistance(node_from_id, 0f));
+        distances.put(node_from_id, 0f);
+        previous.put(node_from_id, -1);
+    
+        while (!queue.isEmpty()) {
+            NodeDistance node = queue.poll();
+            int nodeId = node.getNodeId();
+    
+            if (nodeId == node_to_id) {
+                // Found the shortest path to the destination node
+                return new IntFloatList(getPath(previous, node_to_id), node.getDistance());
+            }
+    
+            if (node.getDistance() > distances.get(nodeId)) {
+                // Skip outdated distances in the priority queue
+                continue;
+            }
+    
+            Integer[] neighbors = graph.getNeighbors(nodeId);
+    
+            for (Integer neighborId : neighbors) {
+                float distance = node.getDistance() + graph.getEdgeWeight(nodeId, neighborId);
+                if (!distances.containsKey(neighborId) || distance < distances.get(neighborId)) {
+                    distances.put(neighborId, distance);
+                    previous.put(neighborId, nodeId);
                     queue.add(new NodeDistance(neighborId, distance));
                 }
             }
         }
+    
+        // No path found to the destination node
+        throw new RuntimeException("No path found");
     }
-
-    // No path found to the destination node
-    throw new RuntimeException("No path found");
-}
 
 private Integer[] getPath(HashMap<Integer, Integer> previous, Integer node_to_id) {
     List<Integer> path = new ArrayList<>();
