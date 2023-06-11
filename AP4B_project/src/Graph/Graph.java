@@ -283,7 +283,7 @@ public class Graph {
      * Update the label of an edge
      * @param node_id_from  The id of the node from which the edge starts       
      * @param node_id_to    The id of the node to which the edge ends
-     * @param label        The new label
+     * @param weight        The new label
      */
     public void updateEdgeWeight(Integer node_id_from, Integer node_id_to, Integer weight){
         Node node_from = nodes.get(node_id_from);

@@ -9,7 +9,6 @@ import static UI.GraphEditor.createAndShowGUI;
 
 
 public class App {
-    private Graph graph;
 
     public static void main(String[] args) {
         Graph graph = new Graph();
@@ -34,8 +33,6 @@ public class App {
         graph.connectUnidirectionalNodes(3, 4, "3-4");
         graph.connectUnidirectionalNodes(4, 6, "big");
         graph.connectUnidirectionalNodes(6, 5, "big");
-        graph.connectUnidirectionalNodes(6, 6, "big");
-
         graph.updateEdgeName(6, 5, "big2");
 
         graph.deleteNode(2, true);
