@@ -345,7 +345,17 @@ public class GraphEditor {
                 return;
             }
 
+
             JPopupMenu contextMenu = new JPopupMenu();
+
+            //add a x and y coordinate for the node
+            JMenuItem xCoordinate = new JMenuItem("X: " + X);
+            JMenuItem yCoordinate = new JMenuItem("Y: " + Y);
+            contextMenu.add(xCoordinate);
+            contextMenu.add(yCoordinate);
+
+            //add separator
+            contextMenu.addSeparator();
 
             JMenuItem deleteItem = new JMenuItem("Delete Node");
             contextMenu.add(deleteItem);
@@ -384,9 +394,13 @@ public class GraphEditor {
                 });
 
                 // Add a submenu change the weight of the edge
+                // Displays current edge weight
+                JMenuItem weightEdgename = new JMenuItem("weight: " + edge.weight);
+                edgeEditMenu.add(weightEdgename);
+                edgeEditMenu.addSeparator();
                 JMenuItem weightEdge = new JMenuItem("Change weight");
                 weightEdge.addActionListener(e -> {
-                    String DialogMessage = "Enter edge weight:";
+                    String DialogMessage = edge.weight + ""     ;
                     String weight = JOptionPane.showInputDialog("Input new weight for edge " + edge.label + " :",
                             DialogMessage);
                     try {
