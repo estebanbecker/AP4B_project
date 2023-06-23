@@ -5,7 +5,7 @@
 
 # Read our project report
 
-[![rapport](https://i.imgur.com/eCTqpKr.png)](https://github.com/derreyann/AP4B_project/blob/main/rapport.pdf)
+[![rapport](https://i.imgur.com/eCTqpKr.png)](https://github.com/derreyann/AP4B_project/blob/main/rapport-fixed.pdf)
 ## Description
 
 We're making a graph editor in Java. Features include:
