@@ -690,11 +690,11 @@ public class GraphEditor {
 
             Draw draw = new Draw(g2d);
 
+            draw.grid();
+            draw.origin();
             
             g2d.setStroke(new BasicStroke(2.0f));
             
-            draw.grid();
-            draw.origin();
             draw.all_arrows(nodes);
             draw.nodes(nodes);
             draw.node_circle(hoveredNodes);
