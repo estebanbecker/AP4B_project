@@ -1,7 +1,6 @@
 package App;
 
 import Graph.Graph;
-import PathFinder.*;
 
 import javax.swing.*;
 
@@ -12,7 +11,7 @@ public class App {
 
     public static void main(String[] args) {
         Graph graph = new Graph();
-
+        /*
         Float[][] positions = new Float[][] {
             { 0.0f, 0.0f },
             { 100.0f, 100.0f },
@@ -50,7 +49,7 @@ public class App {
 
         System.out.println(graph.getEdgeWeight(3, 4));
         System.out.println(graph.getEdgeWeight(4, 5));
-
+        */
         SwingUtilities.invokeLater(() -> {
             createAndShowGUI(graph);
         });
