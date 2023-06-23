@@ -11,7 +11,8 @@ We're making a graph editor in Java. Features include:
  - Saving/Loading graphs in a custom format
 
 ## Who's making what?
-(To be completed)
 
 - Esteban Becker: Data structure
 - Yann Derré: UI
+- Elise Albrecht: Save/Load
+- Pierre-Olivier Cayetanot: Edge Edition
