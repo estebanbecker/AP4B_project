@@ -123,6 +123,7 @@ public class GraphEditor {
 
         newItem.addActionListener(e -> {
             // Handle the "New" action
+            frame.dispose();
             App.restartProgram(new Graph());
         });
         fileMenu.add(newItem);
@@ -144,8 +145,8 @@ public class GraphEditor {
                     Files open_file = new Files(path.toString());
                     Graph new_graph = open_file.readFile();
 
-                    App.restartProgram(new_graph);
                     frame.dispose();
+                    App.restartProgram(new_graph);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -498,7 +499,6 @@ public class GraphEditor {
                     selectedNode = findClickedNode(mouseX, mouseY);
                     big = selectedNode;
                     setDragged(0);
-
                 }
 
                 public void mouseDragged(MouseEvent e) {
@@ -690,11 +690,11 @@ public class GraphEditor {
 
             Draw draw = new Draw(g2d);
 
+            
+            g2d.setStroke(new BasicStroke(2.0f));
+            
             draw.grid();
             draw.origin();
-
-            g2d.setStroke(new BasicStroke(2.0f));
-
             draw.all_arrows(nodes);
             draw.nodes(nodes);
             draw.node_circle(hoveredNodes);
