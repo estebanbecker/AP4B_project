@@ -2,6 +2,10 @@
 
 ![Screenshot 2023-06-02 at 23.22.35](https://i.imgur.com/UsGnJjE.png)
 
+
+# Read our project report
+
+[![rapport](https://i.imgur.com/eCTqpKr.png)](https://github.com/derreyann/AP4B_project/blob/main/rapport.pdf)
 ## Description
 
 We're making a graph editor in Java. Features include:
